@@ -1,0 +1,7 @@
+运行环境：CentOS 5.5的VMware
+值为粗略值，只比较数量级
+
+version 0: 11000
+version 1: 400000
+version 2: 300000
+version 3: 24000

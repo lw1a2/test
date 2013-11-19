@@ -1,0 +1,17 @@
+BIN=a b c
+
+CLEAN=$(BIN:%=%/clean)
+
+all:: $(BIN)
+clean: $(CLEAN)
+
+a:: b
+
+$(BIN)::
+	cd $@ && $(MAKE) -f makefile.lib
+
+$(CLEAN):
+	rm -f lib/*
+	cd $(@D) && $(MAKE) -f makefile.lib clean
+
+.PHONY: all clean

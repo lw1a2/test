@@ -1,0 +1,22 @@
+#定义编译器
+CC=g++
+
+#可执行文件或库
+BIN=liba.so
+
+#源文件
+SRC=1.cpp 2.cpp 3.cpp 4.cpp 5.cpp 6.cpp 
+
+#目标文件，根据cpp自动生成
+OBJ:=$(SRC:%.cpp=%.o)
+
+#生成可执行文件或库的规则
+$(BIN): $(OBJ)
+	$(CC) -shared -L../lib -lb -o $@ $(OBJ)
+	cp $(BIN) ../lib
+
+#清除
+clean:
+	-rm -f $(BIN)
+
+.PHONY: clean

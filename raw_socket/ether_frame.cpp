@@ -8,6 +8,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <net/ethernet.h>
+#include <linux/if_packet.h>
 
 
 /* IP HEADER
@@ -112,7 +116,7 @@ uint16_t cksum(uint16_t *packet, int packlen) {
 void tcp_cksum(ip_header *iph, tcp_header *tcph) {
     uint8_t *buf = NULL;
     uint16_t segment_len = ntohs(iph->tot_len) - iph->header_len * 4;
-    buf = (uint8_t*)malloc(12 + segment_len);
+    buf = (uint8_t *)malloc(12 + segment_len);
     if (!buf) {
         fprintf(stderr, "Out of memory: TCP checksum!\n");
         return;
@@ -125,7 +129,7 @@ void tcp_cksum(ip_header *iph, tcp_header *tcph) {
     buf[10] = (segment_len & 0xFF00) >> 8;
     buf[11] = (segment_len & 0x00FF);
     memcpy(buf + 12, tcph, segment_len);
-    tcph->check = cksum((uint16_t * )buf, (uint16_t)12 + segment_len);
+    tcph->check = cksum((uint16_t *)buf, (uint16_t)12 + segment_len);
 
     free(buf);
 
@@ -133,11 +137,10 @@ void tcp_cksum(ip_header *iph, tcp_header *tcph) {
 }
 
 void ip_cksum(ip_header *iph) {
-    iph->check = cksum((uint16_t * )iph, iph->header_len * 4);
+    iph->check = cksum((uint16_t *)iph, iph->header_len * 4);
 }
 
-void build_syn(char * buf)
-{
+void build_syn(char *buf) {
     ip_header iph;
     tcp_header tcph;
     int ret = 0;
@@ -176,37 +179,55 @@ void build_syn(char * buf)
     return;
 }
 
-
-int main()
-{
+int main() {
     int ret = 0;
-    int sock_out = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
+    int sock_out = socket(AF_PACKET, SOCK_RAW, IPPROTO_RAW);
     if (-1 == sock_out) {
         perror("socket output");
         return errno;
     }
-    const int on = 1;
-    ret = setsockopt(sock_out, IPPROTO_IP, IP_HDRINCL, (const void *)&on, sizeof(on));
-    if (-1 == ret) {
-        perror("setsockopt IP_HDRINCL");
+
+    char buf[54];
+    bzero(buf, sizeof(buf));
+    struct ifreq if_idx;
+    struct ifreq if_mac;
+
+    bzero(&if_idx, sizeof(if_idx));
+    strncpy(if_idx.ifr_name, "eth2", strlen("eth2"));
+    if (ioctl(sock_out, SIOCGIFINDEX, &if_idx) < 0) {
+        perror("SIOCGIFINDEX");
         return errno;
     }
 
-    char buf[40];
-    bzero(buf, sizeof(buf));
-    build_syn(buf);
-
-    struct sockaddr_in addr;
-    bzero(&addr, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(80);
-    ret = inet_pton(AF_INET, "10.16.1.2", &addr.sin_addr);
-    if (ret != 1) {
-        printf("inet_pton 10.16.1.2 error");
-        return 1;
+    bzero(&if_mac, sizeof(if_mac));
+    strncpy(if_mac.ifr_name, "eth2", strlen("eth2"));
+    if (ioctl(sock_out, SIOCGIFHWADDR, &if_mac) < 0) {
+        perror("SIOCGIFHWADDR");
+        return errno;
     }
 
-    ret = sendto(sock_out, buf, sizeof(buf), 0, (struct sockaddr*)&addr, sizeof(addr));
+    struct sockaddr_ll addr;
+    bzero(&addr, sizeof(addr));
+    addr.sll_family = AF_PACKET;
+    addr.sll_ifindex = if_idx.ifr_ifindex;
+    addr.sll_halen = ETH_ALEN;
+    addr.sll_protocol = htons(ETH_P_IP);
+    memcpy(&addr.sll_addr, &if_mac.ifr_hwaddr.sa_data, sizeof(addr.sll_addr));
+    memcpy(buf, &if_mac.ifr_hwaddr.sa_data, 6);
+
+    bzero(&if_mac, sizeof(if_mac));
+    strncpy(if_mac.ifr_name, "eth1", strlen("eth1"));
+    if (ioctl(sock_out, SIOCGIFHWADDR, &if_mac) < 0) {
+        perror("SIOCGIFHWADDR");
+        return errno;
+    }
+
+    memcpy(buf + 6, &if_mac.ifr_hwaddr.sa_data, 6);
+    memcpy(buf + 6 * 2, &addr.sll_protocol, sizeof(addr.sll_protocol));
+
+    build_syn(buf + 14);
+
+    ret = sendto(sock_out, buf, sizeof(buf), 0, (struct sockaddr *)&addr, sizeof(addr));
     if (-1 == ret) {
         perror("sendto");
         return errno;

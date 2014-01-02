@@ -31,30 +31,6 @@ int main()
         perror("setsockopt");
         return errno;
     }
-    serv.sin_addr.s_addr = htonl(INADDR_ANY);
-    ret = bind(sock,(sockaddr*)&serv, sizeof(serv));
-    if (-1 == ret) {
-        perror("bind INADDR_ANY 8888");
-        return errno;
-    }
-    ret = listen(sock, 5);
-    if (-1 == ret) {
-        perror("listen INADDR_ANY 8888");
-        return errno;
-    }
-
-
-
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (-1 == sock) {
-        perror("socket");
-        return errno;
-    }
-    ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
-    if (-1 == ret) {
-        perror("setsockopt");
-        return errno;
-    }
     if (inet_pton(AF_INET, "10.1.1.1", &serv.sin_addr) != 1) {
         printf("inet_pton 10.1.1.1 failed\n");
         return 1;
@@ -97,6 +73,29 @@ int main()
         return errno;
     }
 
+
+    // failed to bind INADDR_ANY, even put it in last
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (-1 == sock) {
+        perror("socket");
+        return errno;
+    }
+    ret = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+    if (-1 == ret) {
+        perror("setsockopt");
+        return errno;
+    }
+    serv.sin_addr.s_addr = htonl(INADDR_ANY);
+    ret = bind(sock, (sockaddr * ) & serv, sizeof(serv));
+    if (-1 == ret) {
+        perror("bind INADDR_ANY 8888");
+        return errno;
+    }
+    ret = listen(sock, 5);
+    if (-1 == ret) {
+        perror("listen INADDR_ANY 8888");
+        return errno;
+    }
 
     return 0;
 }

@@ -19,7 +19,7 @@ int main()
     ret = getsockopt(sock, SOL_SOCKET, SO_RCVBUF, &opt, &len);
     if (-1 == ret)
     {
-        perror("setsockopt");
+        perror("getsockopt");
         return errno;
     }
 

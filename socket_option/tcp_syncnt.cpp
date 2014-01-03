@@ -15,7 +15,7 @@ int main()
         return errno;
     }
 
-    int tcp_syn_retries = 0;
+    int tcp_syn_retries = 1;    // 0 will failed, restricted by kernel
     socklen_t len = sizeof(tcp_syn_retries);
     ret = setsockopt(sock, IPPROTO_TCP, TCP_SYNCNT, &tcp_syn_retries, len);
         if (-1 == ret)

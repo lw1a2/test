@@ -359,14 +359,35 @@
 #print "$deref\n";
 
 
-sub ff {
-    my ($dev, %k) = @_;
-    print "$k{String}\n";
-    print "$k{K}\n";
-    print "$dev\n";
+#sub ff {
+#    my ($dev, %k) = @_;
+#    print "$k{String}\n";
+#    print "$k{K}\n";
+#    print "$dev\n";
+#}
+#
+#my %hash = (String=>1, K=>2);
+#&ff(1, %hash);
+
+
+my $fail = 0;
+
+# check interfaces status
+if (!$fail) {
+    my $out = `ethtool eth1 |grep -i speed`;
+    print "eth1: $out";
+    my ($eth1_speed) = $out =~ /([\d.]+)/;
+    if (!defined($eth1_speed)) {
+        $fail = 1;
+    }
+    if (!$fail) {
+        $out = `ethtool eth2 |grep -i speed`;
+        print "eth2: $out";
+        my ($eth2_speed) = $out =~ /([\d.]+)/;
+        if (!defined($eth2_speed)) {
+            $fail = 1;
+        }
+    }
+    print "fail: $fail\n";
 }
-
-my %hash = (String=>1, K=>2);
-&ff(1, %hash);
-
 

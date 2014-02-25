@@ -370,24 +370,52 @@
 #&ff(1, %hash);
 
 
-my $fail = 0;
+#my $fail = 0;
+#
+## check interfaces status
+#if (!$fail) {
+#    my $out = `ethtool eth1 |grep -i speed`;
+#    print "eth1: $out";
+#    my ($eth1_speed) = $out =~ /([\d.]+)/;
+#    if (!defined($eth1_speed)) {
+#        $fail = 1;
+#    }
+#    if (!$fail) {
+#        $out = `ethtool eth2 |grep -i speed`;
+#        print "eth2: $out";
+#        my ($eth2_speed) = $out =~ /([\d.]+)/;
+#        if (!defined($eth2_speed)) {
+#            $fail = 1;
+#        }
+#    }
+#    print "fail: $fail\n";
+#}
 
-# check interfaces status
-if (!$fail) {
-    my $out = `ethtool eth1 |grep -i speed`;
-    print "eth1: $out";
-    my ($eth1_speed) = $out =~ /([\d.]+)/;
-    if (!defined($eth1_speed)) {
-        $fail = 1;
-    }
-    if (!$fail) {
-        $out = `ethtool eth2 |grep -i speed`;
-        print "eth2: $out";
-        my ($eth2_speed) = $out =~ /([\d.]+)/;
-        if (!defined($eth2_speed)) {
-            $fail = 1;
-        }
-    }
-    print "fail: $fail\n";
+
+#my $s = "a b  c d";
+#$s =~ s/\s{1,}/_/g;
+##$s =~ s/ /_/g;
+#print "$s\n";
+
+#my $os_str = "v5.0_build0252";
+#my ($os_ver) = $os_str =~ /.*(v\d+\.\d+).*/;
+#print "$os_ver\n";
+
+#my $err_msg = 'aaa ';
+#$err_msg .= "exit now!";
+#print "$err_msg\n";
+
+#my $msg = 'Device S*           7.5 GB      ref: n/a         USB DISK Pro (USB)';
+#if ($msg =~ /Device\s*S\*\s*\d\.\d\s*GB\s*ref:\s*n\/a\s*USB\s*DISK\s*Pro\s*\(USB\)/) {
+#    print "a\n"
+#}
+
+my $outmsg = '524288 524288 524288    14.00       0.00';
+my ($np_pkg, $np_time, $tool_thpt) = $outmsg 
+            =~ /^\d+\s+\d+\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*$/m;
+print "tool_thpt: $tool_thpt\n";
+if ($tool_thpt eq '0.00') {
+    print "1\n";
 }
+
 

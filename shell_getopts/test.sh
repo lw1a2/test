@@ -11,7 +11,7 @@ usage() {
     exit
 }
 
-while getopts "abc:h" Option
+while getopts "abc:h" Option	#这个while似乎不能放到函数里
 do
     case $Option in
         a) echo "aaa";;		#无参数的

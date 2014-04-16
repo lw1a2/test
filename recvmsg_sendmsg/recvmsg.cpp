@@ -25,10 +25,10 @@ int main()
     iov[1].iov_base = new char[BUFMAX];
     bzero(iov[1].iov_base, BUFMAX);
 
-    int sock = socket(AF_INET, SOCK_DGRAM, 0);
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (-1 == sock)
     {
-        cout << "socket" << strerror(errno) << endl;
+        cout << "socket: " << strerror(errno) << endl;
         return errno;
     }
 
@@ -36,15 +36,15 @@ int main()
     ret = setsockopt(sock, IPPROTO_IP, IP_PKTINFO, &on, sizeof(on));
     if (-1 == ret)
     {
-        cout << "setsockopt" << strerror(errno) << endl;
+        cout << "setsockopt: " << strerror(errno) << endl;
         return errno;
     }
 
     struct sockaddr_in addr;
     bzero(&addr, sizeof(addr));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(58889);
-    if (inet_pton(AF_INET, "172.173.1.1", &addr.sin_addr) != 1)
+    addr.sin_port = htons(55555);
+    if (inet_pton(AF_INET, "172.173.1.107", &addr.sin_addr) != 1)
     {
         cout << "inet_pton failed" << endl;
         return 1;
@@ -53,7 +53,7 @@ int main()
     ret = bind(sock, (struct sockaddr *)&addr, sizeof(addr));
     if (-1 == ret)
     {
-        cout << "bind" << strerror(errno) << endl;
+        cout << "bind: " << strerror(errno) << endl;
         return errno;
     }
 
@@ -68,7 +68,7 @@ int main()
     int n = recvmsg(sock, &msg, 0);
     if (-1 == n)
     {
-        cout << "recvmsg" << strerror(errno) << endl;
+        cout << "recvmsg: " << strerror(errno) << endl;
         return errno;
     }
 

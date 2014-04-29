@@ -200,7 +200,106 @@
 # fruits.sort()
 # print(fruits)
 
-x = 0
-while x < 10:
-    print(x)
-    x += 1
+# x = 0
+# while x < 10:
+#     print(x)
+#     x += 1
+
+
+
+#import sys
+#sys.path.append("m")
+#import m.spam
+#spam.f()
+
+
+#print(dir())
+
+
+
+# import m.m1
+# m.m1.f()
+# print(dir(m))
+
+
+# from m import m1
+# m1.f()
+
+# from m.m1 import f
+# f()
+
+
+# s = 'test\n'
+# print(s)
+# print(str(s))
+# print(repr(s))
+
+
+# print("this is a {}, that is a {}".format('cat', 'dog'))
+# print("{:f}".format(1))
+
+# print("%d" % 123)
+
+
+# f = open('f.txt', 'r+')
+# #print(f.read())
+# # print(repr(f.readline()))
+# # print(repr(f.readline()))
+# # print(repr(f.readline()))
+# # print(repr(f.readline()))
+# # print(repr(f.readline()))
+# # print(repr(f.readline()))
+# for l in f:
+#     print(l, end='')
+
+# import json
+# s = json.dumps([1, '2', "kkk"])
+# print(s)
+# f = open("1.json", 'w')
+# json.dump([1, '2', "kkk"], f)
+
+
+# import os
+# s = os.getcwd()
+# print(s)
+
+# import shutil
+# s = shutil.disk_usage('.')
+# print(s)
+
+# import glob
+# s = glob.glob("*.txt")
+# print(s)
+# s = glob.glob("m/*.py")
+# print(s)
+
+
+# import sys
+# print(sys.argv)
+# print(sys.argv[0])
+
+# from datetime import date
+# print(date.today())
+
+# import zlib
+# s = b'abc abc abc abc abc abc abc abc abc abc'
+# print(len(s), s)
+# s = zlib.compress(s)
+# print(len(s), s)
+# s = zlib.decompress(s)
+# print(len(s), s)
+
+
+# from string import Template
+# s = Template('$a $b $c')
+# s = s.substitute(a = '1', b = '2', c = '3')
+# print(s)
+
+# s = Template('$a $b $c')
+# s = s.safe_substitute(a = '1', b = '2')
+# print(s)
+
+#print(dir(__main__))
+
+import logging
+logging.warning('Warning:config file %s not found', 'server.conf')

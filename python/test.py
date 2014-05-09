@@ -1,4 +1,4 @@
-#! /usr/bin/env python3.3
+#! /usr/bin/env python3
 
 # if (1 > 0):
 #     print("Hello World")
@@ -216,9 +216,8 @@
 #print(dir())
 
 
-
-# import m.m1
-# m.m1.f()
+# from m.m.m1 import f
+# f()
 # print(dir(m))
 
 
@@ -301,5 +300,212 @@
 
 #print(dir(__main__))
 
-import logging
-logging.warning('Warning:config file %s not found', 'server.conf')
+# import logging
+# logging.warning('Warning:config file %s not found', 'server.conf')
+
+#assert(1)
+
+#print(' aa bb '.strip())
+
+# import os
+# os.system('ls')
+
+# import getopt
+# import sys
+# optlist, args = getopt.getopt(sys.argv[1:], 'abc:d:')
+# print(optlist)
+# print(args)
+
+# import os
+# who = os.system('whoami')
+# print(who)
+
+# import os
+# who = os.popen('whoami').read().strip()
+# print(who)
+
+# import sys
+# import os
+# def fts_single_process(pro):
+#     pid = os.getpid()
+#     who = os.popen('whoami').read().strip()
+
+#     cmd = 'ps -ef | grep ' + pro + '| grep -v grep | grep -v sudo | grep -v -P ' + who + '"\\s+' + str(pid) + '"'
+#     out = os.popen(cmd).read().strip()
+   
+#     if len(out):
+#         print("\nAnother $pro is running, please wait it finish, ps output\n{}\n\n".format(out))
+#         sys.exit(1)
+
+# fts_single_process('bash')
+
+# import m.m.m1
+# m.m.m1.f()
+
+# import datetime
+# print(datetime.datetime.today())
+
+# import re
+# m = re.match(r'processor\s+:\s+(\d+)', 'processor : 7')
+# if (m):
+#     print(m.group(1))
+
+# d = {}
+# def f():
+#     global d
+#     if 1 in d:
+#         d[1][1] = 1
+#     else:
+#         d[1] = {1: 1}
+#     d[1][2] = 2
+
+# f()
+# print(d)
+# print(d[1][1])
+# print(d[1][2])
+
+# import re
+# out = '''1: lo: <LOOPBACK,UP,LOWER_UP> mtu 16436 qdisc noqueue state UNKNOWN 
+#     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+# 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP qlen 1000
+#     link/ether e0:3f:49:49:a7:be brd ff:ff:ff:ff:ff:ff'''
+# #print(out)
+# l = out.split(' brd ')
+# for s in l:
+#     m = re.search(r'(\d+): (eth\d+): \<', s)
+#     if m:
+#         id = m.groups()
+#         print(*id)
+
+#     m = re.search(r'link/ether (\S+)', s)
+#     if m:
+#         mac, = m.groups()
+#         print(mac)
+
+# s = 'abc ddd'
+# m = re.search(r'ddd', s)
+# if m:
+#     print('match')
+
+# s = 'abc ddd'
+# m = re.match(r'ddd', s)
+# if m:
+#     print('match')
+
+
+
+# import os
+# out = os.popen('lsa 2>&1').read().strip()
+# print(out)
+
+# import subprocess
+# out = subprocess.Popen("ls", stdout=subprocess.PIPE).stdout.read()
+# print(out)
+
+# import subprocess
+# cmd = 'ethtool -i ' + 'eth0' + ' | grep driver 2>&1'
+# out = subprocess.check_output(cmd, shell = True).strip()
+# print(str(out, encoding = "utf8"))
+
+#import subprocess
+#subprocess.call('ls')
+
+# import sys
+# import subprocess
+# ret = 0
+# try:
+#     ret = subprocess.call('a')
+# except FileNotFoundError:
+#     print(sys.exc_info()[0])
+#     print(ret)
+
+# import subprocess
+# ret = subprocess.call('a', shell = True)
+# print(ret)
+
+
+# import subprocess
+# cmd = 'ls -l'
+# subprocess.call(cmd, shell = True)
+
+
+# import subprocess
+# subprocess.call(['ls', '-l'])
+
+
+# import subprocess
+# ret = subprocess.call(['rm', '12345'])
+# print(ret)
+
+
+# import subprocess
+# try:
+#     subprocess.check_call(['rm', '12345'])
+# except subprocess.CalledProcessError as e:
+#     print(e.returncode)
+
+
+# import subprocess
+# try:
+#     out = subprocess.check_output('ls')
+#     print(out)
+# except subprocess.CalledProcessError as e:
+#     print(e.returncode)
+
+
+# import subprocess
+# try:
+#     cmd = 'rm 12345'
+#     subprocess.check_output(cmd, shell = True, stderr = subprocess.STDOUT)
+# except subprocess.CalledProcessError as e:
+#     print(e.output)
+
+
+# import subprocess
+# server_ns = 'fts'
+# cmd = "ip netns delete " + server_ns
+# try:
+#     subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell = True)
+# except subprocess.CalledProcessError as e:
+#     print(e.output)
+
+# import os
+# import subprocess
+# import sys
+# pid = os.getpid()
+# who = subprocess.check_output('whoami').strip()
+# who = str(who, encoding = 'utf8')
+# cmd = 'ps -ef | grep ' + 'bash' + '| grep -v grep | grep -v sudo | grep -v -P ' + who + '"\\s+' + str(pid) + '"'
+# try:
+#     out = subprocess.check_output(cmd, shell = True).strip()
+#     out = str(out, encoding = 'utf8')
+#     if out != '':
+#         print("\nAnother $pro is running, please wait it finish, ps output\n{}\n\n".format(out))
+#         sys.exit(1)
+# except subprocess.CalledProcessError as e:
+#     pass
+
+
+
+# import subprocess
+# server_ns = 'fts'
+# cmd = "ip netns|grep " + server_ns
+# try:
+#     subprocess.check_output(cmd, shell = True)
+# except subprocess.CalledProcessError:
+#     print('INFO', "netns {} doesn't exist, so return".format(server_ns))
+
+
+def _dict(d):
+    pass
+
+d = {}
+d[3] = 4
+_dict(d[1][5])
+d[1][5] = 6
+print(d)
+
+
+
+
+

@@ -496,16 +496,27 @@
 #     print('INFO', "netns {} doesn't exist, so return".format(server_ns))
 
 
-def _dict(d):
-    pass
+# d = {}
+# if len(d):
+#     print('a')
 
-d = {}
-d[3] = 4
-_dict(d[1][5])
-d[1][5] = 6
+# s = 'a'
+# if s:
+#     print(s)
+# s = ''
+# if s:
+#     print(s)
+
+# import collections.defaultdict ddict
+
+
+# import ipaddress
+# network = ipaddress.ip_network('10.1.1.1/16', strict = False)
+# network = str(network)
+# print(network[:network.index('/')])
+
+from collections import defaultdict
+d = defaultdict(defaultdict)
+d['a']['b'] = 1       #ok
+d['a']['d']['e'] = 1  #error
 print(d)
-
-
-
-
-

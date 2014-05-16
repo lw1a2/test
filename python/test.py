@@ -251,13 +251,6 @@
 # for l in f:
 #     print(l, end='')
 
-# import json
-# s = json.dumps([1, '2', "kkk"])
-# print(s)
-# f = open("1.json", 'w')
-# json.dump([1, '2', "kkk"], f)
-
-
 # import os
 # s = os.getcwd()
 # print(s)
@@ -507,7 +500,6 @@
 # if s:
 #     print(s)
 
-# import collections.defaultdict ddict
 
 
 # import ipaddress
@@ -515,8 +507,44 @@
 # network = str(network)
 # print(network[:network.index('/')])
 
-from collections import defaultdict
-d = defaultdict(defaultdict)
-d['a']['b'] = 1       #ok
-d['a']['d']['e'] = 1  #error
-print(d)
+
+
+# from collections import defaultdict
+# d = defaultdict(defaultdict)
+# d['a']['b'] = 1       #ok
+# d['a']['d']['e'] = 1  #error
+# print(d)
+
+
+
+# def f():
+#     print('fff')
+
+# d = {}
+# d['f'] = f
+# func = d['f']
+# func()
+
+
+# d = {}
+
+# def f():
+#     d['a'] = 1
+
+# f()
+# print(d)
+
+# s = 'abc[dd]'
+# s = s.replace('[','')
+# s = s.replace(']','')
+# print(s)
+
+# import re
+# s = 'abc[dd]'
+# s = re.sub('\[|\]', '', s)
+# print(s)
+
+
+print("{:.3f}".format(1.1116))
+
+

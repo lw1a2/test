@@ -553,3 +553,14 @@
 # d['port3'] = 1
 
 # print(sorted(d.keys()))
+
+import subprocess
+
+try:
+    cmd = []
+    cmd.append('sleep')
+    cmd.append('50')
+    subprocess.Popen(cmd)
+except subprocess.CalledProcessError as e:
+    print(str(e.output.strip(), encoding = 'utf8'))
+

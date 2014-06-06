@@ -26,13 +26,12 @@ import pymongo
 
 conn = pymongo.Connection('localhost', 27017)
 db = conn.test
-names = db.a.find().sort([('name', pymongo.DESCENDING)]).limit(1)
+names = db.a.find().sort([('_id', pymongo.DESCENDING)]).limit(1)
+_id = ''
 for name in names:
-    print(str(name['_id']))
+    print(name)
+    _id = str(name['_id'])
 
-name2 = {}
-name2['TestID'] = str(name['_id'])
-db.b.insert(name2)
-bs = db.b.find()
-for b in bs:
-    print(b)
+import bson
+name = db.a.find_one({'_id': bson.objectid.ObjectId(_id)})
+print(name)

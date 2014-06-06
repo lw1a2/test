@@ -554,13 +554,22 @@
 
 # print(sorted(d.keys()))
 
-import subprocess
+# import subprocess
 
-try:
-    cmd = []
-    cmd.append('sleep')
-    cmd.append('50')
-    subprocess.Popen(cmd)
-except subprocess.CalledProcessError as e:
-    print(str(e.output.strip(), encoding = 'utf8'))
+# try:
+#     cmd = []
+#     cmd.append('sleep')
+#     cmd.append('50')
+#     subprocess.Popen(cmd)
+# except subprocess.CalledProcessError as e:
+#     print(str(e.output.strip(), encoding = 'utf8'))
 
+
+
+# import datetime
+# print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+
+import os
+files = os.listdir('.') 
+print(files)

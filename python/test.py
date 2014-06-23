@@ -570,6 +570,32 @@
 # print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 
-import os
-files = os.listdir('.') 
-print(files)
+# import os
+# files = os.listdir('.') 
+# print(files)
+
+
+# def f():
+#     return 1, 3
+
+# ret, message = f()
+# print(ret, message)
+
+# def f():
+#     import subprocess
+
+#     try:
+#         print("f")
+#         cmd = []
+#         cmd.append('sleep')
+#         cmd.append('50')
+#         subprocess.Popen(cmd)
+#     except subprocess.CalledProcessError as e:
+#         print(str(e.output.strip(), encoding = 'utf8'))
+
+
+import ipaddress
+ip1 = ipaddress.ip_address("10.1.1.0")
+ip2 = ipaddress.ip_address("10.1.1.255")
+for x in range(int(ip1), int(ip2) + 1):
+    print(ipaddress.ip_address(x))

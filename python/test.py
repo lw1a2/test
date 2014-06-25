@@ -594,8 +594,26 @@
 #         print(str(e.output.strip(), encoding = 'utf8'))
 
 
-import ipaddress
-ip1 = ipaddress.ip_address("10.1.1.0")
-ip2 = ipaddress.ip_address("10.1.1.255")
-for x in range(int(ip1), int(ip2) + 1):
-    print(ipaddress.ip_address(x))
+# import ipaddress
+# ip1 = ipaddress.ip_address("10.1.1.0")
+# ip2 = ipaddress.ip_address("10.1.1.255")
+# for x in range(int(ip1), int(ip2) + 1):
+#     print(ipaddress.ip_address(x))
+
+# import re
+# logf = "/run/ftslog/HttpRps/HttpRpsNAT/ToolsLog/curl_loader/10.12.1.2/cl.log"
+# m = re.search(r'curl_loader\/(.*)\/cl.log', logf)
+# if m:
+#     print(m.groups())
+
+
+# ports = ['port3', 'port4']
+# msg = ", ".join(ports)
+# msg += " is down."
+# print(msg)
+
+import re
+out = '''9: port3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
+10: port4: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000'''
+ports = re.findall(r'\d+:\s+(port\d+):', out)
+print(ports)

@@ -410,12 +410,92 @@
 #    print "a\n"
 #}
 
-my $outmsg = '524288 524288 524288    14.00       0.00';
-my ($np_pkg, $np_time, $tool_thpt) = $outmsg 
-            =~ /^\d+\s+\d+\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*$/m;
-print "tool_thpt: $tool_thpt\n";
-if ($tool_thpt eq '0.00') {
-    print "1\n";
+# my $outmsg = '524288 524288 524288    14.00       0.00';
+# my ($np_pkg, $np_time, $tool_thpt) = $outmsg 
+#             =~ /^\d+\s+\d+\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*$/m;
+# print "tool_thpt: $tool_thpt\n";
+# if ($tool_thpt eq '0.00') {
+#     print "1\n";
+# }
+
+# my $cmdout = "== [ port36 ]
+# name: port36    link-status: down   status: up
+# == [ port37 ]
+# name: port37    link-status: down   status: up
+# == [ port38 ]
+# name: port38    link-status: down   status: up
+# == [ port39 ]
+# name: port39    link-status: down   status: up
+# == [ port40 ]
+# name: port40    link-status: down   status: up
+# == [ port41 ]
+# name: port41    link-status: down   status: up
+# == [ port42 ]
+# name: port42    link-status: down   status: up
+# == [ port43 ]
+# name: port43    link-status: down   status: up
+# == [ port44 ]
+# name: port44    link-status: down   status: up
+# == [ port45 ]
+# name: port45    link-status: up (10Gbps full-duplex)   status: up
+# == [ port46 ]
+# name: port46    link-status: down   status: up
+# == [ port47 ]
+# name: port47    link-status: up (10Gbps full-duplex)   status: up
+# == [ port48 ]
+# name: port48    link-status: down   status: up
+# == [ port49 ]
+# name: port49    link-status: down   status: up
+# == [ port50 ]
+# name: port50    link-status: down   status: up
+# == [ port51 ]
+# name: port51    link-status: down   status: up
+# == [ port52 ]
+# name: port52    link-status: down   status: up
+# == [ internal ]
+# name: internal    link-status: up (1Gbps full-duplex)";
+
+# if ($cmdout =~ /name:\s+port46\s+link-status:\s+up.*/i) {
+#     print("kkkk");
+# }
+
+
+# my $cmdout = 'config switch interface
+# edit "port1"
+# set allowed-vlans 50
+# next
+# edit "port2"
+# next
+# edit "port3"
+# set allowed-vlans 51
+# next
+# edit "port4"
+# set native-vlan 2
+# next
+# edit "internal"
+# set native-vlan 4095
+# set stp-state disabled
+# next
+# edit "bit_trunk"
+# next
+# end';
+
+# my @linearr = split("next\n", $cmdout);
+# foreach my $section (@linearr) {
+#     # print("$section\n\n")
+#     my ($port) = $section =~ /edit\s+\"(\w+)\"/;
+#     my ($vid) = $section =~ /set\s+allowed-vlans\s+(\d+)/;
+#     if ($vid) {
+#         print("$port: $vid\n");
+#     }
+# }
+
+my $vlan = '50';
+if (index($vlan, ',') == -1) {
+    print($vlan);
 }
 
-
+$vlan = '50,51';
+if (index($vlan, ',') == -1) {
+    print($vlan);
+}

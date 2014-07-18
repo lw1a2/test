@@ -612,8 +612,12 @@
 # msg += " is down."
 # print(msg)
 
-import re
-out = '''9: port3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
-10: port4: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000'''
-ports = re.findall(r'\d+:\s+(port\d+):', out)
-print(ports)
+# import re
+# out = '''9: port3: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000
+# 10: port4: <BROADCAST,MULTICAST> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000'''
+# ports = re.findall(r'\d+:\s+(port\d+):', out)
+# print(ports)
+
+l = ["a", "c", "b"]
+l.sort()
+print(l)

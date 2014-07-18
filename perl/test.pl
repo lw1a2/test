@@ -490,12 +490,22 @@
 #     }
 # }
 
-my $vlan = '50';
-if (index($vlan, ',') == -1) {
-    print($vlan);
-}
+# my $vlan = '50';
+# if (index($vlan, ',') == -1) {
+#     print($vlan);
+# }
 
-$vlan = '50,51';
-if (index($vlan, ',') == -1) {
-    print($vlan);
+# $vlan = '50,51';
+# if (index($vlan, ',') == -1) {
+#     print($vlan);
+# }
+
+my $i = 1;
+my $a;
+my $b;
+($a, $b) = $i =~ /(\d+)-*(\w*)/;
+if (defined($b)) {
+    print("$a-$b\n");
+} else {
+    print("$a\n");
 }

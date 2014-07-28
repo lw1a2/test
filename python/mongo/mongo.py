@@ -32,6 +32,7 @@ for name in names:
     print(name)
     _id = str(name['_id'])
 
-import bson
-name = db.a.find_one({'_id': bson.objectid.ObjectId(_id)})
-print(name)
+if _id != '':
+    import bson
+    name = db.a.find_one({'_id': bson.objectid.ObjectId(_id)})
+    print(name)

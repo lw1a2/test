@@ -500,12 +500,59 @@
 #     print($vlan);
 # }
 
-my $i = 1;
-my $a;
-my $b;
-($a, $b) = $i =~ /(\d+)-*(\w*)/;
-if (defined($b)) {
-    print("$a-$b\n");
+# my $i = 1;
+# my $a;
+# my $b;
+# ($a, $b) = $i =~ /(\d+)-*(\w*)/;
+# if (defined($b)) {
+#     print("$a-$b\n");
+# } else {
+#     print("$a\n");
+# }
+
+
+# my @a = (1, 2);
+# print("$#a\n");
+
+
+my $log_dir = "log";
+my $retry = 5;
+if ($log_dir =~ /retry/) {
+    $log_dir =~ s/retry(\d+)/retry$retry/g;
 } else {
-    print("$a\n");
+    $log_dir = "$log_dir/retry$retry";
 }
+print("$log_dir\n");
+
+$retry--;
+if ($log_dir =~ /retry/) {
+    $log_dir =~ s/retry(\d+)/retry$retry/g;
+} else {
+    $log_dir = "$log_dir/retry$retry";
+}
+print("$log_dir\n");
+
+$retry--;
+if ($log_dir =~ /retry/) {
+    $log_dir =~ s/retry(\d+)/retry$retry/g;
+} else {
+    $log_dir = "$log_dir/retry$retry";
+}
+print("$log_dir\n");
+
+$retry--;
+if ($log_dir =~ /retry/) {
+    $log_dir =~ s/retry(\d+)/retry$retry/g;
+} else {
+    $log_dir = "$log_dir/retry$retry";
+}
+print("$log_dir\n");
+
+$retry--;
+if ($log_dir =~ /retry/) {
+    $log_dir =~ s/retry(\d+)/retry$retry/g;
+} else {
+    $log_dir = "$log_dir/retry$retry";
+}
+print("$log_dir\n");
+

@@ -618,6 +618,162 @@
 # ports = re.findall(r'\d+:\s+(port\d+):', out)
 # print(ports)
 
-l = ["a", "c", "b"]
-l.sort()
-print(l)
+# l = ["a", "c", "b"]
+# l.sort()
+# print(l)
+
+# import os
+# from pathlib import Path
+# path = '/a'
+# if Path(path).exists():
+#     dirs = os.listdir(path)
+#     print(dirs)
+
+# import re
+# import pprint
+# log = '''fap(38005:cw->RUN:sta->READY): ps:512 pn:10 txp:35380 rxp:0 txpf:0 txb:18397600 rxb:0 txbf:0
+# fap(38008:cw->1:sta->READY): ps:512 pn:10 txp:0 rxp:35440 txpf:0 txb:0 rxb:18357920 txbf:0
+# fap(38003:cw->1:sta->aa): ps:512 pn:10 txp:35380 rxp:0 txpf:0 txb:18397600 rxb:0 txbf:0
+# fap(38007:cw->33:sta->aa): ps:512 pn:10 txp:35440 rxp:0 txpf:0 txb:18428800 rxb:0 txbf:0
+# fap(38001:cw->33:sta->READY): ps:512 pn:10 txp:35400 rxp:0 txpf:0 txb:18408000 rxb:0 txbf:0
+# fap(38006:cw->RUN:sta->READY): ps:512 pn:10 txp:0 rxp:35380 txpf:0 txb:0 rxb:18326840 txbf:0
+# fap(38002:cw->RUN:sta->READY): ps:512 pn:10 txp:0 rxp:35400 txpf:0 txb:0 rxb:18337200 txbf:0
+# fap(38004:cw->RUN:sta->READY): ps:512 pn:10 txp:0 rxp:35380 txpf:0 txb:0 rxb:18326840 txbf:0
+# TOTAL:thrput_out:56.18 Mbps thrput_in:55.96 Mbps tx_pkts:14160 rx_pkts:14160 tx_pkt_fail:0 tx_byte_fail:0
+# '''
+# m = re.search(r'TOTAL:thrput_out:(.*) Mbps thrput_in:(.*) Mbps tx_pkts:(.*) rx_pkts:(.*) tx_pkt_fail:(.*) tx_byte_fail:(.*)$', log)
+# if m:
+#     thrput_out, thrput_in, tx_pkts, rx_pkts, tx_pkt_fail, tx_byte_fail = m.groups()
+#     print(thrput_out, thrput_in, tx_pkts, rx_pkts, tx_pkt_fail, tx_byte_fail)
+#     print(m.group(0))
+
+# v = re.findall(r'cw->(\w+):sta->(\w+)', log)
+# # print(v)
+# status = {}
+# status['AP_STATUS'] = {}
+# status['STA_STATUS'] = {}
+# for i in range(len(v)):
+#     if v[i][0] in status['AP_STATUS']:
+#         status['AP_STATUS'][v[i][0]] += 1
+#     else:
+#         status['AP_STATUS'][v[i][0]] = 1
+#     if v[i][1] in status['STA_STATUS']:
+#         status['STA_STATUS'][v[i][1]] += 1
+#     else:
+#         status['STA_STATUS'][v[i][1]] = 1
+
+# s = 'AP_STATUS: '
+# for ap_status in status['AP_STATUS']:
+#     s += ap_status + ': ' + str(status['AP_STATUS'][ap_status]) + ', '
+# s = s[0: len(s) - 2]
+# s += '; '
+# s += 'STA_STATUS: '
+# for sta_status in status['STA_STATUS']:
+#     s += sta_status + ': ' + str(status['STA_STATUS'][sta_status]) + ', '
+# s = s[0: len(s) - 2]
+# print(s)
+# pprint.pprint(status)
+
+# import re
+# m = re.search(r'Cps|Rps', 'HttppsTP')
+# if m:
+#     print('Found')
+
+# import re
+# out = 'total cps:     61821'
+# cps_rps = 0
+# m = re.search(r'total\s+\w+:\s+(\d+)', out)
+# if m:
+#     cps_rps, = m.groups()
+#     print(m.group(0))
+
+# print(len("\r\n"))
+
+# import datetime
+# str_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# print(str_time)
+# int_time = datetime.datetime.strptime(str_time, "%Y-%m-%d %H:%M:%S")
+# print(int_time)
+
+# print(datetime.datetime.now() - int_time < datetime.timedelta(seconds = 5))
+
+import re
+out = '''khttpc status: running
+total cps:     137911
+total success: 55170
+total failure: 0
+
+khttpc/1:9 port1 530 0 cps 1325
+khttpc/1:8 port1 602 0 cps 1505
+khttpc/1:7 port1 586 0 cps 1465
+khttpc/1:6 port1 555 0 cps 1387
+khttpc/1:5 port1 586 0 cps 1465
+khttpc/1:4 port1 594 0 cps 1485
+khttpc/1:3 port1 481 0 cps 1202
+khttpc/1:2 port1 580 0 cps 1450
+khttpc/1:1 port1 609 0 cps 1522
+khttpc/1:0 port1 475 0 cps 1187
+khttpc/3:9 port1 1783 0 cps 4457
+khttpc/3:8 port1 1776 0 cps 4440
+khttpc/3:7 port1 1784 0 cps 4460
+khttpc/3:6 port1 1783 0 cps 4457
+khttpc/3:5 port1 1793 0 cps 4482
+khttpc/3:4 port1 1794 0 cps 4485
+khttpc/3:3 port1 1780 0 cps 4450
+khttpc/3:2 port1 1766 0 cps 4415
+khttpc/3:1 port1 1793 0 cps 4482
+khttpc/3:0 port1 1788 0 cps 4470
+khttpc/1:9 port1 527 0 cps 1317
+khttpc/1:8 port1 609 0 cps 1522
+khttpc/1:7 port1 567 0 cps 1417
+khttpc/1:6 port1 582 0 cps 1455
+khttpc/1:5 port1 542 0 cps 1355
+khttpc/1:4 port1 530 0 cps 1325
+khttpc/1:3 port1 531 0 cps 1327
+khttpc/1:2 port1 570 0 cps 1425
+khttpc/1:1 port1 560 0 cps 1400
+khttpc/1:0 port1 522 0 cps 1305
+khttpc/3:9 port2 419 0 cps 1047
+khttpc/3:8 port2 420 0 cps 1050
+khttpc/3:7 port2 422 0 cps 1055
+khttpc/3:6 port2 427 0 cps 1067
+khttpc/3:5 port2 423 0 cps 1057
+khttpc/3:4 port2 422 0 cps 1055
+khttpc/3:3 port2 427 0 cps 1067
+khttpc/3:2 port2 425 0 cps 1062
+khttpc/3:1 port2 423 0 cps 1057
+khttpc/3:0 port2 425 0 cps 1062
+khttpc/1:9 port2 440 0 cps 1100
+khttpc/1:8 port2 553 0 cps 1382
+khttpc/1:7 port2 444 0 cps 1110
+khttpc/1:6 port2 379 0 cps 947
+khttpc/1:5 port2 473 0 cps 1182
+khttpc/1:4 port2 463 0 cps 1157
+khttpc/1:3 port2 415 0 cps 1037
+khttpc/1:2 port2 444 0 cps 1110
+khttpc/1:1 port2 441 0 cps 1102
+khttpc/1:0 port2 540 0 cps 1350
+khttpc/3:9 port2 1736 0 cps 4340
+khttpc/3:8 port2 1738 0 cps 4345
+khttpc/3:7 port2 1751 0 cps 4377
+khttpc/3:6 port2 1730 0 cps 4325
+khttpc/3:5 port2 1739 0 cps 4347
+khttpc/3:4 port2 1730 0 cps 4325
+khttpc/3:3 port2 1748 0 cps 4370
+khttpc/3:2 port2 1728 0 cps 4320
+khttpc/3:1 port2 1743 0 cps 4357
+khttpc/3:0 port2 1724 0 cps 4310'''
+
+lines = re.findall(r'khttpc/\d+:\d+\s+(.*)\s+(\d+)\s+(\d+)\s+.*', out)
+d = {}
+for i in range(len(lines)):
+    port = lines[i][0]
+    success = int(lines[i][1])
+    failure = int(lines[i][2])
+    if port in d:
+        d[port]['success'] += success
+        d[port]['failure'] += failure
+    else:
+        d[port] = {'success': success, 'failure': failure}
+
+print(d)

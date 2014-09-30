@@ -697,83 +697,96 @@
 
 # print(datetime.datetime.now() - int_time < datetime.timedelta(seconds = 5))
 
-import re
-out = '''khttpc status: running
-total cps:     137911
-total success: 55170
-total failure: 0
+# import re
+# out = '''khttpc status: running
+# total cps:     137911
+# total success: 55170
+# total failure: 0
 
-khttpc/1:9 port1 530 0 cps 1325
-khttpc/1:8 port1 602 0 cps 1505
-khttpc/1:7 port1 586 0 cps 1465
-khttpc/1:6 port1 555 0 cps 1387
-khttpc/1:5 port1 586 0 cps 1465
-khttpc/1:4 port1 594 0 cps 1485
-khttpc/1:3 port1 481 0 cps 1202
-khttpc/1:2 port1 580 0 cps 1450
-khttpc/1:1 port1 609 0 cps 1522
-khttpc/1:0 port1 475 0 cps 1187
-khttpc/3:9 port1 1783 0 cps 4457
-khttpc/3:8 port1 1776 0 cps 4440
-khttpc/3:7 port1 1784 0 cps 4460
-khttpc/3:6 port1 1783 0 cps 4457
-khttpc/3:5 port1 1793 0 cps 4482
-khttpc/3:4 port1 1794 0 cps 4485
-khttpc/3:3 port1 1780 0 cps 4450
-khttpc/3:2 port1 1766 0 cps 4415
-khttpc/3:1 port1 1793 0 cps 4482
-khttpc/3:0 port1 1788 0 cps 4470
-khttpc/1:9 port1 527 0 cps 1317
-khttpc/1:8 port1 609 0 cps 1522
-khttpc/1:7 port1 567 0 cps 1417
-khttpc/1:6 port1 582 0 cps 1455
-khttpc/1:5 port1 542 0 cps 1355
-khttpc/1:4 port1 530 0 cps 1325
-khttpc/1:3 port1 531 0 cps 1327
-khttpc/1:2 port1 570 0 cps 1425
-khttpc/1:1 port1 560 0 cps 1400
-khttpc/1:0 port1 522 0 cps 1305
-khttpc/3:9 port2 419 0 cps 1047
-khttpc/3:8 port2 420 0 cps 1050
-khttpc/3:7 port2 422 0 cps 1055
-khttpc/3:6 port2 427 0 cps 1067
-khttpc/3:5 port2 423 0 cps 1057
-khttpc/3:4 port2 422 0 cps 1055
-khttpc/3:3 port2 427 0 cps 1067
-khttpc/3:2 port2 425 0 cps 1062
-khttpc/3:1 port2 423 0 cps 1057
-khttpc/3:0 port2 425 0 cps 1062
-khttpc/1:9 port2 440 0 cps 1100
-khttpc/1:8 port2 553 0 cps 1382
-khttpc/1:7 port2 444 0 cps 1110
-khttpc/1:6 port2 379 0 cps 947
-khttpc/1:5 port2 473 0 cps 1182
-khttpc/1:4 port2 463 0 cps 1157
-khttpc/1:3 port2 415 0 cps 1037
-khttpc/1:2 port2 444 0 cps 1110
-khttpc/1:1 port2 441 0 cps 1102
-khttpc/1:0 port2 540 0 cps 1350
-khttpc/3:9 port2 1736 0 cps 4340
-khttpc/3:8 port2 1738 0 cps 4345
-khttpc/3:7 port2 1751 0 cps 4377
-khttpc/3:6 port2 1730 0 cps 4325
-khttpc/3:5 port2 1739 0 cps 4347
-khttpc/3:4 port2 1730 0 cps 4325
-khttpc/3:3 port2 1748 0 cps 4370
-khttpc/3:2 port2 1728 0 cps 4320
-khttpc/3:1 port2 1743 0 cps 4357
-khttpc/3:0 port2 1724 0 cps 4310'''
+# khttpc/1:9 port1 530 0 cps 1325
+# khttpc/1:8 port1 602 0 cps 1505
+# khttpc/1:7 port1 586 0 cps 1465
+# khttpc/1:6 port1 555 0 cps 1387
+# khttpc/1:5 port1 586 0 cps 1465
+# khttpc/1:4 port1 594 0 cps 1485
+# khttpc/1:3 port1 481 0 cps 1202
+# khttpc/1:2 port1 580 0 cps 1450
+# khttpc/1:1 port1 609 0 cps 1522
+# khttpc/1:0 port1 475 0 cps 1187
+# khttpc/3:9 port1 1783 0 cps 4457
+# khttpc/3:8 port1 1776 0 cps 4440
+# khttpc/3:7 port1 1784 0 cps 4460
+# khttpc/3:6 port1 1783 0 cps 4457
+# khttpc/3:5 port1 1793 0 cps 4482
+# khttpc/3:4 port1 1794 0 cps 4485
+# khttpc/3:3 port1 1780 0 cps 4450
+# khttpc/3:2 port1 1766 0 cps 4415
+# khttpc/3:1 port1 1793 0 cps 4482
+# khttpc/3:0 port1 1788 0 cps 4470
+# khttpc/1:9 port1 527 0 cps 1317
+# khttpc/1:8 port1 609 0 cps 1522
+# khttpc/1:7 port1 567 0 cps 1417
+# khttpc/1:6 port1 582 0 cps 1455
+# khttpc/1:5 port1 542 0 cps 1355
+# khttpc/1:4 port1 530 0 cps 1325
+# khttpc/1:3 port1 531 0 cps 1327
+# khttpc/1:2 port1 570 0 cps 1425
+# khttpc/1:1 port1 560 0 cps 1400
+# khttpc/1:0 port1 522 0 cps 1305
+# khttpc/3:9 port2 419 0 cps 1047
+# khttpc/3:8 port2 420 0 cps 1050
+# khttpc/3:7 port2 422 0 cps 1055
+# khttpc/3:6 port2 427 0 cps 1067
+# khttpc/3:5 port2 423 0 cps 1057
+# khttpc/3:4 port2 422 0 cps 1055
+# khttpc/3:3 port2 427 0 cps 1067
+# khttpc/3:2 port2 425 0 cps 1062
+# khttpc/3:1 port2 423 0 cps 1057
+# khttpc/3:0 port2 425 0 cps 1062
+# khttpc/1:9 port2 440 0 cps 1100
+# khttpc/1:8 port2 553 0 cps 1382
+# khttpc/1:7 port2 444 0 cps 1110
+# khttpc/1:6 port2 379 0 cps 947
+# khttpc/1:5 port2 473 0 cps 1182
+# khttpc/1:4 port2 463 0 cps 1157
+# khttpc/1:3 port2 415 0 cps 1037
+# khttpc/1:2 port2 444 0 cps 1110
+# khttpc/1:1 port2 441 0 cps 1102
+# khttpc/1:0 port2 540 0 cps 1350
+# khttpc/3:9 port2 1736 0 cps 4340
+# khttpc/3:8 port2 1738 0 cps 4345
+# khttpc/3:7 port2 1751 0 cps 4377
+# khttpc/3:6 port2 1730 0 cps 4325
+# khttpc/3:5 port2 1739 0 cps 4347
+# khttpc/3:4 port2 1730 0 cps 4325
+# khttpc/3:3 port2 1748 0 cps 4370
+# khttpc/3:2 port2 1728 0 cps 4320
+# khttpc/3:1 port2 1743 0 cps 4357
+# khttpc/3:0 port2 1724 0 cps 4310'''
 
-lines = re.findall(r'khttpc/\d+:\d+\s+(.*)\s+(\d+)\s+(\d+)\s+.*', out)
-d = {}
-for i in range(len(lines)):
-    port = lines[i][0]
-    success = int(lines[i][1])
-    failure = int(lines[i][2])
-    if port in d:
-        d[port]['success'] += success
-        d[port]['failure'] += failure
-    else:
-        d[port] = {'success': success, 'failure': failure}
+# lines = re.findall(r'khttpc/\d+:\d+\s+(.*)\s+(\d+)\s+(\d+)\s+.*', out)
+# d = {}
+# for i in range(len(lines)):
+#     port = lines[i][0]
+#     success = int(lines[i][1])
+#     failure = int(lines[i][2])
+#     if port in d:
+#         d[port]['success'] += success
+#         d[port]['failure'] += failure
+#     else:
+#         d[port] = {'success': success, 'failure': failure}
 
-print(d)
+# print(d)
+
+def total(initial = 5, *numbers, **keywords):
+    count = initial
+    for number in numbers:
+        count += number
+    for key in keywords:
+        count += keywords[key]
+    return count
+
+print(total(10, 1, 2, 3, vegetables = 50, fruits = 100))
+
+
+

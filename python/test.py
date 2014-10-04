@@ -778,15 +778,25 @@
 
 # print(d)
 
-def total(initial = 5, *numbers, **keywords):
-    count = initial
-    for number in numbers:
-        count += number
-    for key in keywords:
-        count += keywords[key]
-    return count
+# def total(initial = 5, *numbers, **keywords):
+#     count = initial
+#     for number in numbers:
+#         count += number
+#     for key in keywords:
+#         count += keywords[key]
+#     return count
 
-print(total(10, 1, 2, 3, vegetables = 50, fruits = 100))
+# print(total(10, 1, 2, 3, vegetables = 50, fruits = 100))
 
 
+import pickle
 
+l = ['a', 'b', 'c']
+f = open('1.pickle', 'wb')
+pickle.dump(l, f)
+f.close()
+del l
+
+f = open('1.pickle', 'rb')
+l = pickle.load(f)
+print(l)

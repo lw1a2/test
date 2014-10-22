@@ -794,14 +794,17 @@
 # print(l)
 # del l[0: 2]
 # print(l)
-import re
-last_log = 'Time:2014-10-10-13:11:24, trig_intv:36409 pkt_num:10 per:5.00/100 current_per:-0.52/100, adj_done:1'
-m = re.search(r'Time:.*,\s*trig_intv:(\d+)\s+pkt_num:\d+\s+per:(.*)/100\s+current_per:(.*)/100,\s+.*', last_log)
-if m:
-    trig_intv, per, current_per = m.groups()
-    trig_intv = int(trig_intv)
-    per = float(per)
-    current_per = float(current_per)
-    print(trig_intv)
-    print(per)
-    print(current_per)
+
+# print(total(10, 1, 2, 3, vegetables = 50, fruits = 100))
+
+
+# import pickle
+
+# l = ['a', 'b', 'c']
+# f = open('1.pickle', 'wb')
+# pickle.dump(l, f)
+# f.close()
+# del l
+
+# f = open('1.pickle', 'rb')
+# l = pickle.load(f)

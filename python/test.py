@@ -808,3 +808,13 @@
 
 # f = open('1.pickle', 'rb')
 # l = pickle.load(f)
+
+# a = list(range(1))
+# print(a)
+# print(a[::10])
+
+import re
+driver = 'bonding'
+m = re.search(r'ixgbe|bonding', driver)
+if m:
+    print(driver)

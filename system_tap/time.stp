@@ -1,0 +1,17 @@
+#! /usr/bin/env stap
+global func_total_time, func_time
+
+probe process("./2").function("foo").call {
+	func_time[ppfunc()] = gettimeofday_ns()
+}
+probe process("./2").function("foo").return {
+	func_total_time[ppfunc()] += gettimeofday_ns() - func_time[ppfunc()]
+}
+
+probe process("./2").function("bar").call {
+	func_time[ppfunc()] = gettimeofday_ns()
+}
+probe process("./2").function("bar").return {
+	func_total_time[ppfunc()] += gettimeofday_ns() - func_time[ppfunc()]
+}
+

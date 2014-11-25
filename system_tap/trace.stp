@@ -1,0 +1,15 @@
+#! /usr/bin/env stap
+
+probe process("./1").function("bar").call {
+	printf("%s -> %s\n", thread_indent(1), ppfunc())
+}
+probe process("./1").function("bar").return {
+	printf("%s <- %s\n", thread_indent(-1), ppfunc())
+}
+
+probe process("./1").function("foo").call {
+    printf("%s -> %s\n", thread_indent(1), ppfunc())
+}
+probe process("./1").function("foo").return {
+    printf("%s <- %s\n", thread_indent(-1), ppfunc())
+}

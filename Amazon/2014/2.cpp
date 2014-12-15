@@ -4,6 +4,29 @@
 
 using namespace std;
 
+/* 
+给定一个二维数组，按照“右->左下->左->上”的步骤来遍历数组，直到不存在可以继续遍历的数为止
+数组从文件中读入，文件的第一行为数组的列和行，如：
+输入2_1.txt：
+5 3
+1 2 3 4 5
+6 7 8 9 10
+11 12 13 14 15
+输出：
+1 2 3 4 5 9 13 12 11 6 7 8
+
+输入2_2.txt：
+3 5
+1 2 3
+4 5 6
+7 8 9
+10 11 12
+13 14 15
+输出：
+1 2 3 5 7 4
+*/
+
+
 vector < int > convertMatrix(int width, int height, vector < int > matrix) {
     vector<int> res;
     set<int> s;

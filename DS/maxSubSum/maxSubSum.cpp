@@ -3,7 +3,7 @@
 
 using namespace std;
 
-//·ÖÖÎ·¨
+//åˆ†æ²»æ³•
 int maxSubRec(const vector<int>& a, int left, int right)
 {
     if (left == right)
@@ -20,13 +20,13 @@ int maxSubRec(const vector<int>& a, int left, int right)
 
     int mid = (left + right) / 2;
 
-    //×ó°ë²¿·ÖµÄ×î´óÖµ
+    //å·¦åŠéƒ¨åˆ†çš„æœ€å¤§å€¼
     int maxLeft = maxSubRec(a, left, mid);
-    //ÓÒ°ë²¿·ÖµÄ×î´óÖµ
+    //å³åŠéƒ¨åˆ†çš„æœ€å¤§å€¼
     int maxRight = maxSubRec(a, mid + 1, right);
     
-    //¿çÔ½×óÓÒ²¿·ÖµÄ×î´óÖµ
-    //¿çÔ½µÄ×ó²¿·Ö
+    //è·¨è¶Šå·¦å³éƒ¨åˆ†çš„æœ€å¤§å€¼
+    //è·¨è¶Šçš„å·¦éƒ¨åˆ†
     int maxLeftSub = 0;
     int sumLeftSub = 0;
     for (int i = mid; i >= left; --i)
@@ -37,7 +37,7 @@ int maxSubRec(const vector<int>& a, int left, int right)
             maxLeftSub = sumLeftSub;
         }
     }
-    //¿çÔ½µÄÓÒ²¿·Ö
+    //è·¨è¶Šçš„å³éƒ¨åˆ†
     int maxRightSub = 0;
     int sumRightSub = 0;
     for (int i = mid + 1; i <= right; ++i)
@@ -49,7 +49,7 @@ int maxSubRec(const vector<int>& a, int left, int right)
         }
     }
 
-    //·µ»ØÈıÕß×î´óµÄ
+    //è¿”å›ä¸‰è€…æœ€å¤§çš„
     return max(max(maxLeft, maxRight), maxLeftSub + maxRightSub);
 }
 
@@ -58,7 +58,7 @@ int maxSubSum3(const vector<int>& a)
     return maxSubRec(a, 0, a.size() - 1);
 }
 
-//Ì°ĞÄËã·¨£¬²¢Êä³öÆğÊ¼Î»ÖÃ
+//è´ªå¿ƒç®—æ³•ï¼Œå¹¶è¾“å‡ºèµ·å§‹ä½ç½®
 int maxSubSum4(const vector<int>& a)
 {
     int maxSum = 0, thisSum = 0;
@@ -87,7 +87,7 @@ int maxSubSum4(const vector<int>& a)
     return maxSum;
 }
 
-//Ì°ĞÄËã·¨
+//è´ªå¿ƒç®—æ³•
 int maxSubSum5(const vector<int>& a)
 {
     int maxSum = 0;
@@ -108,7 +108,7 @@ int maxSubSum5(const vector<int>& a)
     return maxSum;
 }
 
-//Çó×îĞ¡Öµ
+//æ±‚æœ€å°å€¼
 int minSubSum4(const vector<int>& a)
 {
     int minSum = 0;

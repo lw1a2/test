@@ -34,6 +34,23 @@ int LIS(const vector<int>& v, vector<int>& r, int i) {
     return r[i];
 }
 
+// 非递归实现
+int LIS2(const vector<int>& v, vector<int>& r, int i) {
+    for (int j = i + 1; j < v.size(); ++j) {
+        if (v[i] < v[j]) {
+            // v[i] < v[j]，说明r[i] = 1 + r[j]
+            if (r[i] < 1 + r[j]) {
+                r[i] = 1 + r[j];
+            }
+        }
+    }
+
+    if (0 == r[i]) {
+        r[i] = 1;
+    }
+    return r[i];
+}
+
 int main() {
     /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
     int N = 0;
@@ -48,8 +65,19 @@ int main() {
     // r[i]表示包含节点v[i]的最长升序序列长度
     vector<int> r(N, 0);
     int longest = 0;
-    for (int i = 0; i < v.size(); ++i) {
-        int tmp = LIS(v, r, i);
+
+    // for (int i = 0; i < v.size(); ++i) {
+    //     int tmp = LIS(v, r, i);
+    //     if (longest < tmp) {
+    //         longest = tmp;
+    //     }
+    // }
+
+    // cout << longest << endl;
+    
+    r[r.size() - 1] = 1;
+    for (int i = v.size() - 1; i >= 0; --i) {
+        int tmp = LIS2(v, r, i);
         if (longest < tmp) {
             longest = tmp;
         }

@@ -119,6 +119,7 @@ int LCS3(const string& x, const string& y, string& maxSub)
     vector<int> tmp(y.size(), -1);
     //c[i][j]：x的前i个元素和y的前j个元素的最大公共子串长度
     vector<vector<int> > c(x.size(), tmp);
+    // end保存x中公共字串的末尾位置
     int end = 0;
 
     int i = 0;

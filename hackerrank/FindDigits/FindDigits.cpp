@@ -5,6 +5,9 @@
 #include <algorithm>
 using namespace std;
 
+/*
+https://www.hackerrank.com/challenges/find-digits
+*/
 
 int main() {
     /* Enter your code here. Read input from STDIN. Print output to STDOUT */   

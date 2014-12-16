@@ -49,9 +49,6 @@ int LIS2(const vector<int>& v, vector<int>& r, int i) {
         }
     }
 
-    if (0 == r[i]) {
-        r[i] = 1;
-    }
     return r[i];
 }
 
@@ -68,10 +65,11 @@ int main() {
     }
 
     // r[i]表示包含节点v[i]的最长升序序列长度
-    vector<int> r(N, 0);
+    vector<int> r;
     int longest = 0;
 
     // 实现1
+    // r.assign(N, 0);
     // for (int i = 0; i < v.size(); ++i) {
     //     int tmp = LIS(v, r, i);
     //     if (longest < tmp) {
@@ -81,7 +79,7 @@ int main() {
     // cout << longest << endl;
 
     // 实现2
-    r[r.size() - 1] = 1;
+    r.assign(N, 1);
     for (int i = v.size() - 1; i >= 0; --i) {
         int tmp = LIS2(v, r, i);
         if (longest < tmp) {

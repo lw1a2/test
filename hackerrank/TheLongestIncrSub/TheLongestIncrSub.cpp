@@ -59,6 +59,7 @@ int LIS3(const vector<int>& v) {
     }
 
     // M[len] = i：表示为了得到len长度的序列，所需要的最小索引为i。
+    // 我们总是在M[len]里保存较小的索引，这样可以得到更长的序列。
     // v[M[len]]：长度为len的序列的最后一个元素。可知v[M[len]]是递增的。
     vector<int> M(v.size() + 1, 0);
     // 当前的最大长度

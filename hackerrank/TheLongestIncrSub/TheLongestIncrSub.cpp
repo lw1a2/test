@@ -52,6 +52,37 @@ int LIS2(const vector<int>& v, vector<int>& r, int i) {
     return r[i];
 }
 
+// 非递归实现，性能略好
+int LIS3(const vector<int>& v) {
+    if (v.empty()) {
+        return 0;
+    }
+
+    // M[len] = i：表示为了得到len长度的序列，所需要的最小索引为i。
+    // v[M[len]]：长度为len的序列的最后一个元素。可知v[M[len]]是递增的。
+    vector<int> M(v.size() + 1, 0);
+    // 当前的最大长度
+    int len = 1;
+
+    for (int i = 1; i < v.size(); ++i) {
+        if (v[M[len]] < v[i]) {
+            // 如果v[M[len]] < v[i]，则把v[i]加入到最长序列里，可以得到新的最长序列
+            M[++len] = i;
+        } else {
+            // 否则，查找M中v[i] < v[M[j]]的元素，更新它的最小索引为i
+            // 因为v[M[len]]是递增的，这里可以使用折半查找来确定j的位置，进一步加快速度（未实现）
+            for (int j = 1; j <= len; ++j) {
+                if (v[i] <= v[M[j]]) {
+                    M[j] = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    return len;
+}
+
 int main() {
     /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
     int N = 0;
@@ -64,11 +95,11 @@ int main() {
         v[i] = tmp;
     }
 
-    // r[i]表示包含节点v[i]的最长升序序列长度
     vector<int> r;
     int longest = 0;
 
     // 实现1
+    // r[i]表示包含节点v[i]的最长升序序列长度
     // r.assign(N, 0);
     // for (int i = 0; i < v.size(); ++i) {
     //     int tmp = LIS(v, r, i);
@@ -79,14 +110,18 @@ int main() {
     // cout << longest << endl;
 
     // 实现2
-    r.assign(N, 1);
-    for (int i = v.size() - 1; i >= 0; --i) {
-        int tmp = LIS2(v, r, i);
-        if (longest < tmp) {
-            longest = tmp;
-        }
-    }
-    cout << longest << endl;
+    // r[i]表示包含节点v[i]的最长升序序列长度
+    // r.assign(N, 1);
+    // for (int i = v.size() - 1; i >= 0; --i) {
+    //     int tmp = LIS2(v, r, i);
+    //     if (longest < tmp) {
+    //         longest = tmp;
+    //     }
+    // }
+    // cout << longest << endl;
+
+    // 实现3
+    cout << LIS3(v) << endl;
     
     return 0;
 }

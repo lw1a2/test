@@ -27,14 +27,14 @@ int main() {
         int need = 0;
 
         for (int x = min; x <= r; ++x) {
-            for (int y = min; y <= r; ++y) {
-                if (pow(x, 2) + pow(y, 2) == r_sqr) {
+            for (int y = x + 1; y <= r; ++y) {
+                if (x * x + y * y == r_sqr) {
                     // cout << "x: " << x << ", y: " << y << endl;
                     ++need;
                 }
             }
         }
-        need = need * 4 + 4;
+        need = need * 4 * 2 + 4;
         // cout << need << endl;
         if (need > k) {
             cout << "impossible" << endl;

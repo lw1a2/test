@@ -63,7 +63,7 @@ string::size_type kmp(const string& t, const string& p)
         }
     }
 
-    if (p.size() == j)              //jµ½´ï×îºó£¬ËµÃ÷ÕÒµ½ÁË
+    if (p.size() == j)              //jåˆ°è¾¾æœ€åï¼Œè¯´æ˜æ‰¾åˆ°äº†
     {
         return i - p.size();
     }
@@ -73,8 +73,8 @@ string::size_type kmp(const string& t, const string& p)
 
 string::size_type kmp3(const string& t, const string& p)
 {
-    //next[i]£º´Ó0µ½iÇ°²¿·ÖºÍºó²¿·ÖµÄ"×î´ó¹«¹²³¤¶È"
-    //Èç£¬p=abacaba£¬Ôònext[6]=3£¨ÖµÎªaba£©
+    //next[i]ï¼šä»0åˆ°iå‰éƒ¨åˆ†å’Œåéƒ¨åˆ†çš„"æœ€å¤§å…¬å…±é•¿åº¦"
+    //å¦‚ï¼Œp=abacabaï¼Œåˆ™next[6]=3ï¼ˆå€¼ä¸ºabaï¼‰
     vector<string::size_type> next(p.size(), 0);
     string::size_type k = 0;
     for (string::size_type q = 1; q < p.size(); ++q)
@@ -99,12 +99,12 @@ string::size_type kmp3(const string& t, const string& p)
         }
         else
         {
-            if (j == 0) i++;        //ÈôjÎªµÚÒ»¸öÔªËØ£¬ÔòµİÔöi£¬j²»±ä
-            else j = next[j - 1];   //jÖ®Ç°ÓĞ¼¸¸öÖØ¸´µÄÔªËØ£¬¾ÍÌø¹ı¼¸¸ö
+            if (j == 0) i++;        //è‹¥jä¸ºç¬¬ä¸€ä¸ªå…ƒç´ ï¼Œåˆ™é€’å¢iï¼Œjä¸å˜
+            else j = next[j - 1];   //jä¹‹å‰æœ‰å‡ ä¸ªé‡å¤çš„å…ƒç´ ï¼Œå°±è·³è¿‡å‡ ä¸ª
         }
     }
 
-    if (p.size() == j)              //jµ½´ï×îºó£¬ËµÃ÷ÕÒµ½ÁË
+    if (p.size() == j)              //jåˆ°è¾¾æœ€åï¼Œè¯´æ˜æ‰¾åˆ°äº†
     {
         return i - p.size();
     }
@@ -112,22 +112,22 @@ string::size_type kmp3(const string& t, const string& p)
     return string::npos;
 }
 
-//Ä¿Ç°×îÈİÒ×Àí½âµÄ·½·¨
+//ç›®å‰æœ€å®¹æ˜“ç†è§£çš„æ–¹æ³•
 string::size_type kmp5(const string& t, const string& p)
 {
-    //next[i]£ºp[0..i]µÄÇ°²¿·ÖºÍºó²¿·ÖµÄ"×î´ó¹«¹²³¤¶È"
-    //Èç£¬p=abacaba£¬Ôònext[6]=3£¨ÖµÎªaba£©
+    //next[i]ï¼šp[0..i]çš„å‰éƒ¨åˆ†å’Œåéƒ¨åˆ†çš„"æœ€å¤§å…¬å…±é•¿åº¦"
+    //å¦‚ï¼Œp=abacabaï¼Œåˆ™next[6]=3ï¼ˆå€¼ä¸ºabaï¼‰
     vector<string::size_type> next(p.size(), 0);  
-    //next[0]Ê¼ÖÕÎª0
+    //next[0]å§‹ç»ˆä¸º0
     for (string::size_type i = 1; i < p.size(); ++i)
     {
-        int len = next[i - 1];  //p[0..i-1]µÄ¹«¹²²¿·ÖµÄ³¤¶È
-        int index = len;        //p[0..i-1]µÄ¹«¹²²¿·ÖÓÒ²àµÄ1Î»    
-        //Èôp[index] != p[i]
-        //ÔòÈÃlen=next[index]£¬¼ÌĞø±È½Ïp[index]ºÍp[i]
+        int len = next[i - 1];  //p[0..i-1]çš„å…¬å…±éƒ¨åˆ†çš„é•¿åº¦
+        int index = len;        //p[0..i-1]çš„å…¬å…±éƒ¨åˆ†å³ä¾§çš„1ä½    
+        //è‹¥p[index] != p[i]
+        //åˆ™è®©len=next[index]ï¼Œç»§ç»­æ¯”è¾ƒp[index]å’Œp[i]
         while (p[index] != p[i] && len > 0)   
         {
-            len = next[index];  //Õâ¸öµØ·½»¹ÊÇÓĞµãÈÆ£¬´ı²¹³ä×¢ÊÍ
+            len = next[index];  //è¿™ä¸ªåœ°æ–¹è¿˜æ˜¯æœ‰ç‚¹ç»•ï¼Œå¾…è¡¥å……æ³¨é‡Š
             index = len;
         }
         if (p[index] == p[i]) next[i] = len + 1;
@@ -137,18 +137,18 @@ string::size_type kmp5(const string& t, const string& p)
     string::size_type i = 0, j = 0;
     while (i < p.size() && j < t.size())
     {
-        if (p[i] == t[j])           //ÈôÏàµÈÔò¶¼µİÔö
+        if (p[i] == t[j])           //è‹¥ç›¸ç­‰åˆ™éƒ½é€’å¢
         {
             ++i; ++j;
         }
         else
         {
-            if (i == 0) j++;        //ÈôiÎªµÚÒ»¸öÔªËØ£¬ÔòµİÔöj£¬i²»±ä
-            else i = next[i - 1];   //iÖ®Ç°ÓĞ¼¸¸öÖØ¸´µÄÔªËØ£¬¾ÍÌø¹ı¼¸¸ö
+            if (i == 0) j++;        //è‹¥iä¸ºç¬¬ä¸€ä¸ªå…ƒç´ ï¼Œåˆ™é€’å¢jï¼Œiä¸å˜
+            else i = next[i - 1];   //iä¹‹å‰æœ‰å‡ ä¸ªé‡å¤çš„å…ƒç´ ï¼Œå°±è·³è¿‡å‡ ä¸ª
         }
     }
 
-    if (p.size() == i)              //iµ½´ï×îºó£¬ËµÃ÷ÕÒµ½ÁË
+    if (p.size() == i)              //iåˆ°è¾¾æœ€åï¼Œè¯´æ˜æ‰¾åˆ°äº†
     {
         return j - p.size();
     }

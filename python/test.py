@@ -813,8 +813,33 @@
 # print(a)
 # print(a[::10])
 
-import re
-driver = 'bonding'
-m = re.search(r'ixgbe|bonding', driver)
-if m:
-    print(driver)
+# import re
+# driver = 'bonding'
+# m = re.search(r'ixgbe|bonding', driver)
+# if m:
+#     print(driver)
+
+# import math
+# a = ['0', '1', '2', '3', '4', '5']
+# b = 0
+# for i in a:
+#     b += int(math.pow(2, int(i)))
+# print(hex(b))
+
+# import copy
+# d = {1: [1, 2, 3]}
+# dd = copy.deepcopy(d)
+# d[1].pop()
+# print(d)
+# print(dd)
+
+import math
+core_mask = 0
+cpu_count = 20
+core_list = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
+if cpu_count > 4:
+    # use 1 cores for system
+    core_list.pop(0)
+for core in core_list:
+    core_mask += int(math.pow(2, int(core)))
+print(hex(core_mask))

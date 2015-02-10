@@ -1,0 +1,7 @@
+编译：
+gcc 1.c -fsanitize=address -g
+
+运行：
+export ASAN_OPTIONS=verbosity=1:malloc_context_size=20 
+./a.out
+

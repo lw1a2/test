@@ -17,12 +17,10 @@
 # print(range(10))
 
 # print('===========================')
-# for x in range(2, 10):
+# for x in range(2, 4):
 #     print(x)
-#     #if x == 5:
-#         #break
 # else:
-#     print("else:")
+#     print("done")
 
 
 # print('===========================')
@@ -833,13 +831,44 @@
 # print(d)
 # print(dd)
 
-import math
-core_mask = 0
-cpu_count = 20
-core_list = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
-if cpu_count > 4:
-    # use 1 cores for system
-    core_list.pop(0)
-for core in core_list:
-    core_mask += int(math.pow(2, int(core)))
-print(hex(core_mask))
+# import math
+# core_mask = 0
+# cpu_count = 20
+# core_list = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
+# if cpu_count > 4:
+#     # use 1 cores for system
+#     core_list.pop(0)
+# for core in core_list:
+#     core_mask += int(math.pow(2, int(core)))
+# print(hex(core_mask))
+
+
+# import re
+# out = '916318     40841    828909   5% /'
+# d = {}
+# m = re.search(r'(\d+)\s+(\d+)\s+\d+\s+\d+%', out)
+# if m:
+#     print(m.groups(0))
+#     d["Total"] = round(float(m.group(1)) / 1000, 2)
+#     d["Used"] = round(float(m.group(2)) / 1000, 2)
+# print(d)
+
+# out = '/dev/sda2               108794      2107    101138   2% /var/log'
+# d = {}
+# m = re.search(r'(\d+)\s+(\d+)\s+\d+\s+\d+%', out)
+# if m:
+#     print(m.groups(0))
+#     d["Total"] = round(float(m.group(1)) / 1000, 2)
+#     d["Used"] = round(float(m.group(2)) / 1000, 2)
+# print(d)
+
+l = [1, 2, 3]
+l2 = l[:]
+print(l2)
+l3 = l[0:1]
+print(l3)
+l4 = l[:-1]
+print(l4)
+
+del l[0]
+print(l)

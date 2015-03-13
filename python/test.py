@@ -862,13 +862,28 @@
 #     d["Used"] = round(float(m.group(2)) / 1000, 2)
 # print(d)
 
-l = [1, 2, 3]
-l2 = l[:]
-print(l2)
-l3 = l[0:1]
-print(l3)
-l4 = l[:-1]
-print(l4)
+# l = [1, 2, 3]
+# l2 = l[:]
+# print(l2)
+# l3 = l[0:1]
+# print(l3)
+# l4 = l[:-1]
+# print(l4)
 
-del l[0]
-print(l)
+# del l[0]
+# print(l)
+
+# import os
+# import time
+
+# if __name__ == "__main__":  
+#     ret = os.fork()
+#     if ret == 0:
+#         # child
+#         time.sleep(5)
+#         print('done')
+
+d = range(0, 1)
+print(list(d))
+d = range(1, 2)
+print(list(d))

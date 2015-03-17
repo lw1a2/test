@@ -12,32 +12,51 @@ int main() {
     int T;
     cin >> T;
     for (int i = 0; i < T; ++i) {
-        string s, tmp;
+        string s;
         cin >> s;
-        tmp = s;
-        int k = 0;
-        bool deleted = false;
-        while (1) {
-            bool need_del = false;
-            for (int j = 0; j < tmp.size() / 2; ++j) {
-                if (tmp[j] != tmp[tmp.size() - j - 1]) {
-                    need_del = true;
-                    break;
+        bool found = false;
+        int left = 0;
+        int right = s.size() - 1;
+        while (left <= right && !found) {
+            if (s[left] != s[right]) {
+                int new_left = left + 1;
+                int new_right = right;
+                found = true;
+                while (new_left <= new_right) {
+                    if (s[new_left] != s[new_right]) {
+                        found = false;
+                        break;
+                    }
+                    ++new_left;
+                    --new_right;
                 }
-            }
-            if (need_del) {
-                tmp = s;
-                tmp.erase(tmp.begin() + k, tmp.begin() + k + 1);
-                deleted = true;
-                ++k;
-            } else {
-                if (deleted) {
-                    cout << k - 1 << endl;
+                if (found) {
+                    cout << left << endl;
                 } else {
-                    cout << -1 << endl;
+                    new_left = left;
+                    new_right = right - 1;
+                    found = true;
+                    while (new_left <= new_right) {
+                        if (s[new_left] != s[new_right]) {
+                            found = false;
+                            break;
+                        }
+                        ++new_left;
+                        --new_right;
+                    }
+                    if (found) {
+                        cout << right << endl;
+                    } else {
+                        cout << -1 << endl;
+                        found = true;
+                    }
                 }
-                break;
             }
+            ++left;
+            --right;
+        }
+        if (!found) {
+            cout << -1 << endl;
         }
     }
     return 0;

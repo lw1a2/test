@@ -888,8 +888,9 @@
 # d = range(1, 2)
 # print(list(d))
 
-import datetime
-import time
-monitor_start_time = datetime.datetime.now()
-time.sleep(2)
-print(datetime.datetime.now() - monitor_start_time < datetime.timedelta(seconds = 1))
+import re
+out = 'Not enough memory available on socket 0! Requested: 29224MB, available: 14676MB'
+m = re.search(r'Not enough memory available on socket \d+\! Requested: \d+MB, available: (\d+)MB', out)
+if m:
+    print(str(m.group(0)))
+    print(m.group(1))

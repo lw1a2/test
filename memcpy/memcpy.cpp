@@ -6,9 +6,11 @@ using namespace std;
 
 void* my_memcpy(void *dest, const void *src, size_t count)
 {
+    // convert to char*
     char *pDest = static_cast<char*>(dest);
     const char *pSrc = static_cast<const char*>(src);
 
+    // in case of overlap
     if (pDest > pSrc && pDest < pSrc + count)
     {
         for (size_t i = count; i > 0; --i)

@@ -5,9 +5,7 @@
 #include <algorithm>
 using namespace std;
 
-
-int main() {
-    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
+void f1() {
     int T;
     cin >> T;
     vector<vector<long> > vec(T);
@@ -40,6 +38,34 @@ int main() {
         }
         cout << count << endl;
     }
+}
+
+void f2() {
+    int T;
+    cin >> T;
+    long max = 0;
+    for (int i = 0; i < T; ++i) {
+        long begin, end;
+        cin >> begin;
+        cin >> end;
+        
+        long begin_sqrt = (long) sqrt(begin);
+        long begin_end = (long) sqrt(end);
+        int count = 0;
+        for (int j = begin_sqrt; j <= begin_end; ++j) {
+            if (begin <= j *j && j * j <= end) {
+                ++count;
+            }
+        }
+        cout << count << endl;
+    }
+}
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
+    // f1();
+
+    f2();
 
     return 0;
 }

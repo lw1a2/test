@@ -69,9 +69,78 @@ char file_name[128] = "/tmp/http_header_fitler.lua";
                     "\tend\n" \
                     "end\n"
 
+/*
+  convert operator to function, such as:
+  a contains b --> string.match(a, b)
+  a not-contains b --> not string.match(a, b)
+*/
+int convert_op2func(char **p_converted, char **p_filter, int max_len, 
+    char *op, char *func_pref, size_t *i, size_t *j, int *double_quot_begin)
+{
+    char *converted = *p_converted;
+    char *filter = *p_filter;
+
+    // find word on left of op
+    size_t word_len = 0;
+    int k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of op
+    --(*j);
+    for (; k >= 0; k--) {
+        if (converted[k] == ' ')
+            break;
+        else {
+            converted[k] = '\0';
+            word_len++;
+            --(*j);
+        }
+    }
+    if (k < 0)
+        k = 0;
+    strcpy(converted + strlen(converted), func_pref);
+    if (*j + strlen(func_pref) >= max_len)
+        return 1;
+    *j += strlen(func_pref);
+    while (k < word_len) {
+        converted[(*j)++] = filter[k++];
+    }
+    if (*j + 1 >= max_len)
+        return 1;
+    converted[(*j)++] = ',';
+    if (*j + 1 >= max_len)
+        return 1;
+    converted[(*j)++] = ' ';
+
+    // word on right of op
+    *i += strlen(op) + 1;
+    while (*i < strlen(filter)) {
+        if (filter[*i] == '"') {
+            if (*double_quot_begin) {
+                *double_quot_begin = 0;
+                if (*j + 1 >= max_len)
+                    return 1;
+                converted[(*j)++] = filter[(*i)++];
+                break;
+            }
+            else
+                *double_quot_begin = 1;
+        }
+
+        if (filter[*i] == ' ' && !*double_quot_begin)
+            break;
+        if (*j + 1 >= max_len)
+            return 1;
+        converted[(*j)++] = filter[(*i)++];
+    }
+
+    if (*j + 1 >= max_len)
+        return 1;
+    converted[(*j)++] = ')';
+
+    return 0;
+}
+
 int convert_filter(char *converted, char *filter, int max_len)
 {
-    printf("filter: %s\n", filter);
+    // printf("filter: %s\n", filter);
 
     size_t i, j;
     int double_quot_begin = 0;
@@ -106,60 +175,9 @@ int convert_filter(char *converted, char *filter, int max_len)
             && filter[i + 6] == 'n'
             && filter[i + 7] == 's') {
 
-            // find word on left of "contains"
-            size_t word_len = 0;
-            int k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of "contains"
-            --j;
-            for (; k >= 0; k--) {
-                if (converted[k] == ' ')
-                    break;
-                else {
-                    converted[k] = '\0';
-                    word_len++;
-                    --j;
-                }
-            }
-            if (k < 0)
-                k = 0;
-            strcpy(converted + strlen(converted), "string.match(");
-            if (j + strlen("string.match(") >= max_len)
+            if (convert_op2func(&converted, &filter, max_len, 
+                "contains", "string.match(", &i, &j, &double_quot_begin))
                 return 1;
-            j += strlen("string.match(");
-            while (k < word_len) {
-                converted[j++] = filter[k++];
-            }
-            if (j + 1 >= max_len)
-                return 1;
-            converted[j++] = ',';
-            if (j + 1 >= max_len)
-                return 1;
-            converted[j++] = ' ';
-
-            // word on right of "contains"
-            i += strlen("contains") + 1;
-            while (i < strlen(filter)) {
-                if (filter[i] == '"') {
-                    if (double_quot_begin) {
-                        double_quot_begin = 0;
-                        if (j + 1 >= max_len)
-                            return 1;
-                        converted[j++] = filter[i++];
-                        break;
-                    }
-                    else
-                        double_quot_begin = 1;
-                }
-
-                if (filter[i] == ' ' && !double_quot_begin)
-                    break;
-                if (j + 1 >= max_len)
-                    return 1;
-                converted[j++] = filter[i++];
-            }
-
-            if (j + 1 >= max_len)
-                return 1;
-            converted[j++] = ')';
             
             continue;
         }
@@ -180,60 +198,9 @@ int convert_filter(char *converted, char *filter, int max_len)
             && filter[i + 10] == 'n'
             && filter[i + 11] == 's') {
 
-            // find word on left of "not-contains"
-            size_t word_len = 0;
-            int k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of "contains"
-            --j;
-            for (; k >= 0; k--) {
-                if (converted[k] == ' ')
-                    break;
-                else {
-                    converted[k] = '\0';
-                    word_len++;
-                    --j;
-                }
-            }
-            if (k < 0)
-                k = 0;
-            strcpy(converted + strlen(converted), "not string.match(");
-            if (j + strlen("not string.match(") >= max_len)
+            if (convert_op2func(&converted, &filter, max_len, 
+                "not-contains", "not string.match(", &i, &j, &double_quot_begin))
                 return 1;
-            j += strlen("not string.match(");
-            while (k < word_len) {
-                converted[j++] = filter[k++];
-            }
-            if (j + 1 >= max_len)
-                return 1;
-            converted[j++] = ',';
-            if (j + 1 >= max_len)
-                return 1;
-            converted[j++] = ' ';
-
-            // word on right of "not-contains"
-            i += strlen("not-contains") + 1;
-            while (i < strlen(filter)) {
-                if (filter[i] == '"') {
-                    if (double_quot_begin) {
-                        double_quot_begin = 0;
-                        if (j + 1 >= max_len)
-                            return 1;
-                        converted[j++] = filter[i++];
-                        break;
-                    }
-                    else
-                        double_quot_begin = 1;
-                }
-
-                if (filter[i] == ' ' && !double_quot_begin)
-                    break;
-                if (j + 1 >= max_len)
-                    return 1;
-                converted[j++] = filter[i++];
-            }
-
-            if (j + 1 >= max_len)
-                return 1;
-            converted[j++] = ')';
             
             continue;
         }
@@ -244,7 +211,7 @@ int convert_filter(char *converted, char *filter, int max_len)
         converted[j++] = filter[i++];
     }
 
-    printf("converted: %s\n", converted);
+    // printf("converted: %s\n", converted);
     return 0;
 }
 

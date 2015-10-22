@@ -12,6 +12,7 @@ typedef struct req
     char host[1024];
     char url[1024];
     char user_agent[1024];
+    int req_len;
 } req_t;
 
 lua_State* L;
@@ -19,29 +20,19 @@ lua_State* L;
 void http_header_fitler(req_t *req)
 {
     int ret;
-    int created_table = 0;
     lua_getglobal(L, "http_header_fitler");
+    lua_newtable(L);
+    lua_pushinteger(L, req->req_len);
+    lua_setfield(L, -2, "req_len");
     if (req->host && strlen(req->host)) {
-        if (!created_table) {
-            lua_newtable(L);
-            created_table = 1;
-        }
         lua_pushstring(L, req->host);
         lua_setfield(L, -2, "host");
     }
     if (req->url && strlen(req->url)) {
-        if (!created_table) {
-            lua_newtable(L);
-            created_table = 1;
-        }
         lua_pushstring(L, req->url);
         lua_setfield(L, -2, "url");
     }
     if (req->user_agent && strlen(req->user_agent)) {
-        if (!created_table) {
-            lua_newtable(L);
-            created_table = 1;
-        }
         lua_pushstring(L, req->user_agent);
         lua_setfield(L, -2, "user_agent");
     }
@@ -323,6 +314,7 @@ void test()
 
     req_t req;
     bzero(&req, sizeof(req));
+    req.req_len = 1000;
     strcpy(req.host, "1.1.1.2");
     strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
     http_header_fitler(&req);
@@ -341,6 +333,7 @@ void test2()
 
     req_t req;
     bzero(&req, sizeof(req));
+    req.req_len = 1000;
     strcpy(req.host, "1.1.1.2");
     strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
     http_header_fitler(&req);
@@ -359,6 +352,7 @@ void test3()
 
     req_t req;
     bzero(&req, sizeof(req));
+    req.req_len = 1000;
     strcpy(req.host, "1.1.1.2");
     strcpy(req.user_agent, "curl");
     http_header_fitler(&req);
@@ -377,6 +371,26 @@ void test4()
 
     req_t req;
     bzero(&req, sizeof(req));
+    req.req_len = 1000;
+    strcpy(req.host, "1.1.1.2");
+    strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
+    http_header_fitler(&req);
+
+    lua_close(L);
+}
+
+void test_req_len()
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    char *filter = "req.req_len <= 1000";
+    gen_lua_file(filter);
+    luaL_dofile(L, file_name);
+
+    req_t req;
+    bzero(&req, sizeof(req));
+    req.req_len = 1000;
     strcpy(req.host, "1.1.1.2");
     strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
     http_header_fitler(&req);
@@ -390,5 +404,6 @@ int main(int argc, char *argv[])
     test2();
     test3();
     test4();
+    test_req_len();
     return 0;
 }

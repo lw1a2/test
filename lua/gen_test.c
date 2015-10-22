@@ -46,8 +46,12 @@ void http_header_fitler(req_t *req)
 
     ret = lua_pcall(L, 1, 1, 0);
     if (ret == 0) {
-        ret = (int)lua_tonumber(L, -1);
-        printf("The ret is %d \n", ret);
+        int match = (int)lua_tonumber(L, -1);
+        if (match) {
+            printf("matched\n");
+        } else {
+            printf("don't match\n");
+        }
     } else {
         printf("filter is bad\n");
     }
@@ -64,7 +68,7 @@ char file_name[128] = "/tmp/http_header_fitler.lua";
                     "\tend\n" \
                     "end\n"
 
-void gen_lua_file(void)
+void gen_lua_file(char *filter)
 {
     FILE *fp = fopen(file_name, "w");
     if(fp == NULL) {
@@ -72,7 +76,6 @@ void gen_lua_file(void)
     }
     char content[8192];
     bzero(content, sizeof(content));
-    char *filter = "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host == \"1.1.1.2\"";
 
     sprintf(content, LUA_CONTENT, filter);
 
@@ -87,8 +90,10 @@ int main(int argc, char *argv[])
     L = luaL_newstate();
     luaL_openlibs(L);
 
-    gen_lua_file();
+    char *filter = "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host == \"1.1.1.2\"";
+    gen_lua_file(filter);
     luaL_dofile(L, file_name);
+
     req_t req;
     bzero(&req, sizeof(req));
     strcpy(req.host, "1.1.1.2");

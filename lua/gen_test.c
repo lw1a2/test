@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <strings.h>
 #include <string.h>
@@ -68,7 +69,186 @@ char file_name[128] = "/tmp/http_header_fitler.lua";
                     "\tend\n" \
                     "end\n"
 
-void gen_lua_file(char *filter)
+int convert_filter(char *converted, char *filter, int max_len)
+{
+    printf("filter: %s\n", filter);
+
+    size_t i, j;
+    int double_quot_begin = 0;
+    for (i = 0, j = 0; i < strlen(filter);) {
+        if (filter[i] == '"') {
+            if (double_quot_begin)
+                double_quot_begin = 0;
+            else
+                double_quot_begin = 1;
+        }
+
+        // != --> ~=
+        if (!double_quot_begin
+            && filter[i] == '!' 
+            && i + 1 < strlen(filter) && filter[i + 1] == '=') {
+            if (j + 1 >= max_len)
+                return 1;
+            converted[j++] = '~';
+            ++i;
+            continue;
+        }
+
+        // a contains b --> string.match(a, b)
+        if (!double_quot_begin
+            && filter[i] == 'c'
+            && i + strlen("contains") < strlen(filter)
+            && filter[i + 1] == 'o'
+            && filter[i + 2] == 'n'
+            && filter[i + 3] == 't'
+            && filter[i + 4] == 'a'
+            && filter[i + 5] == 'i'
+            && filter[i + 6] == 'n'
+            && filter[i + 7] == 's') {
+
+            // find word on left of "contains"
+            size_t word_len = 0;
+            int k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of "contains"
+            --j;
+            for (; k >= 0; k--) {
+                if (converted[k] == ' ')
+                    break;
+                else {
+                    converted[k] = '\0';
+                    word_len++;
+                    --j;
+                }
+            }
+            if (k < 0)
+                k = 0;
+            strcpy(converted + strlen(converted), "string.match(");
+            if (j + strlen("string.match(") >= max_len)
+                return 1;
+            j += strlen("string.match(");
+            while (k < word_len) {
+                converted[j++] = filter[k++];
+            }
+            if (j + 1 >= max_len)
+                return 1;
+            converted[j++] = ',';
+            if (j + 1 >= max_len)
+                return 1;
+            converted[j++] = ' ';
+
+            // word on right of "contains"
+            i += strlen("contains") + 1;
+            while (i < strlen(filter)) {
+                if (filter[i] == '"') {
+                    if (double_quot_begin) {
+                        double_quot_begin = 0;
+                        if (j + 1 >= max_len)
+                            return 1;
+                        converted[j++] = filter[i++];
+                        break;
+                    }
+                    else
+                        double_quot_begin = 1;
+                }
+
+                if (filter[i] == ' ' && !double_quot_begin)
+                    break;
+                if (j + 1 >= max_len)
+                    return 1;
+                converted[j++] = filter[i++];
+            }
+
+            if (j + 1 >= max_len)
+                return 1;
+            converted[j++] = ')';
+            
+            continue;
+        }
+
+        // a not-contains b --> not string.match(a, b)
+        if (!double_quot_begin
+            && filter[i] == 'n'
+            && i + strlen("not-contains") < strlen(filter)
+            && filter[i + 1] == 'o'
+            && filter[i + 2] == 't'
+            && filter[i + 3] == '-'
+            && filter[i + 4] == 'c'
+            && filter[i + 5] == 'o'
+            && filter[i + 6] == 'n'
+            && filter[i + 7] == 't'
+            && filter[i + 8] == 'a'
+            && filter[i + 9] == 'i'
+            && filter[i + 10] == 'n'
+            && filter[i + 11] == 's') {
+
+            // find word on left of "not-contains"
+            size_t word_len = 0;
+            int k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of "contains"
+            --j;
+            for (; k >= 0; k--) {
+                if (converted[k] == ' ')
+                    break;
+                else {
+                    converted[k] = '\0';
+                    word_len++;
+                    --j;
+                }
+            }
+            if (k < 0)
+                k = 0;
+            strcpy(converted + strlen(converted), "not string.match(");
+            if (j + strlen("not string.match(") >= max_len)
+                return 1;
+            j += strlen("not string.match(");
+            while (k < word_len) {
+                converted[j++] = filter[k++];
+            }
+            if (j + 1 >= max_len)
+                return 1;
+            converted[j++] = ',';
+            if (j + 1 >= max_len)
+                return 1;
+            converted[j++] = ' ';
+
+            // word on right of "not-contains"
+            i += strlen("not-contains") + 1;
+            while (i < strlen(filter)) {
+                if (filter[i] == '"') {
+                    if (double_quot_begin) {
+                        double_quot_begin = 0;
+                        if (j + 1 >= max_len)
+                            return 1;
+                        converted[j++] = filter[i++];
+                        break;
+                    }
+                    else
+                        double_quot_begin = 1;
+                }
+
+                if (filter[i] == ' ' && !double_quot_begin)
+                    break;
+                if (j + 1 >= max_len)
+                    return 1;
+                converted[j++] = filter[i++];
+            }
+
+            if (j + 1 >= max_len)
+                return 1;
+            converted[j++] = ')';
+            
+            continue;
+        }
+
+        // normal character
+        if (j + 1 >= max_len)
+            return 1;
+        converted[j++] = filter[i++];
+    }
+
+    printf("converted: %s\n", converted);
+    return 0;
+}
+
+int gen_lua_file(char *filter)
 {
     FILE *fp = fopen(file_name, "w");
     if(fp == NULL) {
@@ -82,11 +262,11 @@ void gen_lua_file(char *filter)
     fputs(content, fp);
     fflush(fp);
     fclose(fp);
+    return 0;
 }
 
-int main(int argc, char *argv[])
+void test()
 {
-    int ret;
     L = luaL_newstate();
     luaL_openlibs(L);
 
@@ -101,5 +281,82 @@ int main(int argc, char *argv[])
     http_header_fitler(&req);
 
     lua_close(L);
+}
+
+void test_convert_filter()
+{
+    char filter[4096];
+    char converted[8192];
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host == \"1.1.1.2\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, filter));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host != \"1.1.1.2\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host ~= \"1.1.1.2\""));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent == \"!=\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "req.user_agent == \"!=\""));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent contains \"Wget/1.15 (linux-gnu)\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "string.match(req.user_agent, \"Wget/1.15 (linux-gnu)\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent contains \"abc\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "string.match(req.user_agent, \"abc\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent contains abc");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "string.match(req.user_agent, abc)"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent contains \"contains\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "string.match(req.user_agent, \"contains\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent not-contains \"Wget/1.15 (linux-gnu)\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "not string.match(req.user_agent, \"Wget/1.15 (linux-gnu)\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent not-contains \"abc\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "not string.match(req.user_agent, \"abc\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent not-contains abc");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "not string.match(req.user_agent, abc)"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "req.user_agent not-contains \"not-contains\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "not string.match(req.user_agent, \"not-contains\")"));
+}
+
+int main(int argc, char *argv[])
+{
+    test_convert_filter();
     return 0;
 }

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
 #include <strings.h>
@@ -217,6 +218,12 @@ int convert_filter(char *converted, char *filter, int max_len)
 
 int gen_lua_file(char *filter)
 {
+    char *converted = (char*)calloc(2 * strlen(filter), 1);
+    if (convert_filter(converted, filter, 2 * strlen(filter))) {
+        printf("failed to convert filter\n");
+        return 1;
+    }
+
     FILE *fp = fopen(file_name, "w");
     if(fp == NULL) {
         return;
@@ -224,30 +231,13 @@ int gen_lua_file(char *filter)
     char content[8192];
     bzero(content, sizeof(content));
 
-    sprintf(content, LUA_CONTENT, filter);
+    sprintf(content, LUA_CONTENT, converted);
 
     fputs(content, fp);
     fflush(fp);
     fclose(fp);
+    free(converted);
     return 0;
-}
-
-void test()
-{
-    L = luaL_newstate();
-    luaL_openlibs(L);
-
-    char *filter = "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host == \"1.1.1.2\"";
-    gen_lua_file(filter);
-    luaL_dofile(L, file_name);
-
-    req_t req;
-    bzero(&req, sizeof(req));
-    strcpy(req.host, "1.1.1.2");
-    strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
-    http_header_fitler(&req);
-
-    lua_close(L);
 }
 
 void test_convert_filter()
@@ -322,8 +312,83 @@ void test_convert_filter()
     assert(!strcmp(converted, "not string.match(req.user_agent, \"not-contains\")"));
 }
 
+void test()
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    char *filter = "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host == \"1.1.1.2\"";
+    gen_lua_file(filter);
+    luaL_dofile(L, file_name);
+
+    req_t req;
+    bzero(&req, sizeof(req));
+    strcpy(req.host, "1.1.1.2");
+    strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
+    http_header_fitler(&req);
+
+    lua_close(L);
+}
+
+void test2()
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    char *filter = "req.user_agent contains \"Wget\"";
+    gen_lua_file(filter);
+    luaL_dofile(L, file_name);
+
+    req_t req;
+    bzero(&req, sizeof(req));
+    strcpy(req.host, "1.1.1.2");
+    strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
+    http_header_fitler(&req);
+
+    lua_close(L);
+}
+
+void test3()
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    char *filter = "req.user_agent contains \"Wget\"";
+    gen_lua_file(filter);
+    luaL_dofile(L, file_name);
+
+    req_t req;
+    bzero(&req, sizeof(req));
+    strcpy(req.host, "1.1.1.2");
+    strcpy(req.user_agent, "curl");
+    http_header_fitler(&req);
+
+    lua_close(L);
+}
+
+void test4()
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    char *filter = "req.user_agent contains \"Wget\" and req.host == \"1.1.1.2\"";
+    gen_lua_file(filter);
+    luaL_dofile(L, file_name);
+
+    req_t req;
+    bzero(&req, sizeof(req));
+    strcpy(req.host, "1.1.1.2");
+    strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
+    http_header_fitler(&req);
+
+    lua_close(L);
+}
+
 int main(int argc, char *argv[])
 {
-    test_convert_filter();
+    test();
+    test2();
+    test3();
+    test4();
     return 0;
 }

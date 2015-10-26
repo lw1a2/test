@@ -231,6 +231,51 @@ int gen_lua_file(char *filter)
     return 0;
 }
 
+#define LUA_FUNC_CONTENT "function f_%s(req)\n" \
+                    "\tif %s then\n" \
+                    "\t\treturn 1\n" \
+                    "\telse\n" \
+                    "\t\treturn 0\n" \
+                    "\tend\n" \
+                    "end\n"
+int gen_lua_func(char *name, char *filter, char **content)
+{
+    char *converted = (char*)calloc(2 * strlen(filter), 1);
+    if (convert_filter(converted, filter, 2 * strlen(filter))) {
+        printf("failed to convert filter\n");
+        return 1;
+    }
+
+    sprintf(*content, LUA_FUNC_CONTENT, name, converted);
+    free(converted);
+
+    return 0;
+}
+
+int gen_filters_lua_file()
+{
+    FILE *fp = fopen(file_name, "w");
+    if(fp == NULL) {
+        return 1;
+    }
+    char *content = (char*)calloc(8192 * 64, 1);
+
+    if (gen_lua_func("b", "req.user_agent == \"Wget/1.15 (linux-gnu)\" and req.host == \"1.1.1.2\"", &content))
+        return 1;
+    strcpy(content + strlen(content), "\n");
+
+    char *p = content + strlen(content);
+    if (gen_lua_func("c", "req.url == \"/\"", &p))
+        return 1;
+    strcpy(content + strlen(content), "\n");
+
+    fputs(content, fp);
+    fflush(fp);
+    fclose(fp);
+    free(content);
+    return 0;
+}
+
 void test_convert_filter()
 {
     char filter[4096];
@@ -398,12 +443,18 @@ void test_req_len()
     lua_close(L);
 }
 
+void test_filters(void)
+{
+    gen_filters_lua_file();
+}
+
 int main(int argc, char *argv[])
 {
-    test();
-    test2();
-    test3();
-    test4();
-    test_req_len();
+    // test();
+    // test2();
+    // test3();
+    // test4();
+    // test_req_len();
+    test_filters();
     return 0;
 }

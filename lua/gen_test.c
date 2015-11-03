@@ -66,8 +66,8 @@ char file_name[128] = "/tmp/http_header_fitler.lua";
   a contains b --> string.match(a, b)
   a not-contains b --> not string.match(a, b)
 */
-int convert_op2func(char **p_converted, char **p_filter, int max_len, 
-    char *op, char *func_pref, size_t *i, size_t *j, int *double_quot_begin)
+int convert_op2func(char **p_converted, char **p_filter, size_t max_len, 
+    const char *op, const char *func_pref, size_t *i, size_t *j, int *double_quot_begin)
 {
     char *converted = *p_converted;
     char *filter = *p_filter;
@@ -76,10 +76,11 @@ int convert_op2func(char **p_converted, char **p_filter, int max_len,
     size_t word_len = 0;
     int k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of op
     --(*j);
-    for (; k >= 0; k--) {
-        if (converted[k] == ' ')
+    for (; k >= 0; --k) {
+        if (converted[k] == ' ' || converted[k] == '(' || converted[k] == ')') {
+            ++k;
             break;
-        else {
+        } else {
             converted[k] = '\0';
             word_len++;
             --(*j);
@@ -91,7 +92,8 @@ int convert_op2func(char **p_converted, char **p_filter, int max_len,
     if (*j + strlen(func_pref) >= max_len)
         return 1;
     *j += strlen(func_pref);
-    while (k < word_len) {
+    size_t m = 0;
+    while (m++ < word_len) {
         converted[(*j)++] = filter[k++];
     }
     if (*j + 1 >= max_len)
@@ -340,6 +342,18 @@ void test_convert_filter()
     strcpy(filter, "req.user_agent not-contains \"not-contains\"");
     convert_filter(converted, filter, sizeof(converted));
     assert(!strcmp(converted, "not string.match(req.user_agent, \"not-contains\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "(http.user_agent contains \"curl.*0\" and http.url == \"/\")");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "(string.match(http.user_agent, \"curl.*0\") and http.url == \"/\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "((http.user_agent contains \"curl.*0\") and (http.url == \"/\"))");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "((string.match(http.user_agent, \"curl.*0\")) and (http.url == \"/\"))"));
 }
 
 void test()

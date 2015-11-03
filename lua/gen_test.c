@@ -313,12 +313,6 @@ void test_convert_filter()
 
     bzero(filter, sizeof(filter));
     bzero(converted, sizeof(converted));
-    strcpy(filter, "req.user_agent contains abc");
-    convert_filter(converted, filter, sizeof(converted));
-    assert(!strcmp(converted, "string.match(req.user_agent, abc)"));
-
-    bzero(filter, sizeof(filter));
-    bzero(converted, sizeof(converted));
     strcpy(filter, "req.user_agent contains \"contains\"");
     convert_filter(converted, filter, sizeof(converted));
     assert(!strcmp(converted, "string.match(req.user_agent, \"contains\")"));
@@ -455,6 +449,7 @@ int main(int argc, char *argv[])
     // test3();
     // test4();
     // test_req_len();
-    test_filters();
+    // test_filters();
+    test_convert_filter();
     return 0;
 }

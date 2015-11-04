@@ -78,7 +78,6 @@ int convert_op2func(char **p_converted, char **p_filter, size_t max_len,
     --(*j);
     for (; k >= 0; --k) {
         if (converted[k] == ' ' || converted[k] == '(' || converted[k] == ')') {
-            ++k;
             break;
         } else {
             converted[k] = '\0';
@@ -86,15 +85,13 @@ int convert_op2func(char **p_converted, char **p_filter, size_t max_len,
             --(*j);
         }
     }
-    if (k < 0)
-        k = 0;
     strcpy(converted + strlen(converted), func_pref);
     if (*j + strlen(func_pref) >= max_len)
         return 1;
     *j += strlen(func_pref);
     size_t m = 0;
     while (m++ < word_len) {
-        converted[(*j)++] = filter[k++];
+        converted[(*j)++] = filter[*i - 2 - word_len + m];
     }
     if (*j + 1 >= max_len)
         return 1;
@@ -354,6 +351,12 @@ void test_convert_filter()
     strcpy(filter, "((http.user_agent contains \"curl.*0\") and (http.url == \"/\"))");
     convert_filter(converted, filter, sizeof(converted));
     assert(!strcmp(converted, "((string.match(http.user_agent, \"curl.*0\")) and (http.url == \"/\"))"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "http.accept_encoding contains \"gzip\" or http.accept_encoding contains \"deflat*\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "string.match(http.accept_encoding, \"gzip\") or string.match(http.accept_encoding, \"deflat*\")"));
 }
 
 void test()

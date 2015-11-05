@@ -74,7 +74,11 @@ int convert_op2func(char **p_converted, char **p_filter, size_t max_len,
 
     // find word on left of op
     size_t word_len = 0;
-    int k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of op
+    int k = 0;
+    if (strlen(converted) - 1 >= 0 && converted[strlen(converted) - 1] == ' ')
+        k = strlen(converted) - 2;   // -2 stand for skip blank which is on left of op
+    else
+        k = strlen(converted) - 1;
     --(*j);
     for (; k >= 0; --k) {
         if (converted[k] == ' ' || converted[k] == '(' || converted[k] == ')') {
@@ -131,7 +135,7 @@ int convert_op2func(char **p_converted, char **p_filter, size_t max_len,
 
 int convert_filter(char *converted, char *filter, int max_len)
 {
-    // printf("filter: %s\n", filter);
+    printf("filter: %s\n", filter);
 
     size_t i, j;
     int double_quot_begin = 0;
@@ -202,7 +206,7 @@ int convert_filter(char *converted, char *filter, int max_len)
         converted[j++] = filter[i++];
     }
 
-    // printf("converted: %s\n", converted);
+    printf("converted: %s\n", converted);
     return 0;
 }
 
@@ -357,6 +361,12 @@ void test_convert_filter()
     strcpy(filter, "http.accept_encoding contains \"gzip\" or http.accept_encoding contains \"deflat*\"");
     convert_filter(converted, filter, sizeof(converted));
     assert(!strcmp(converted, "string.match(http.accept_encoding, \"gzip\") or string.match(http.accept_encoding, \"deflat*\")"));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "http.url==\"/\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "http.url==\"/\""));
 }
 
 void test()
@@ -435,6 +445,25 @@ void test4()
     lua_close(L);
 }
 
+void test5()
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+
+    char *filter = "re";
+    gen_lua_file(filter);
+    luaL_dofile(L, file_name);
+
+    req_t req;
+    bzero(&req, sizeof(req));
+    req.req_len = 1000;
+    strcpy(req.host, "1.1.1.2");
+    strcpy(req.user_agent, "Wget/1.15 (linux-gnu)");
+    http_header_fitler(&req);
+
+    lua_close(L);
+}
+
 void test_req_len()
 {
     L = luaL_newstate();
@@ -465,6 +494,7 @@ int main(int argc, char *argv[])
     // test2();
     // test3();
     // test4();
+    // test5();
     // test_req_len();
     // test_filters();
     test_convert_filter();

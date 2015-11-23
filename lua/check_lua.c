@@ -128,10 +128,13 @@ static int convert_check_filter(char *converted, char *filter, size_t max_len)
     int double_quot_begin = 0;
     for (i = 0, j = 0; i < strlen(filter);) {
         if (filter[i] == '"') {
-            if (double_quot_begin)
-                double_quot_begin = 0;
-            else
-                double_quot_begin = 1;
+            if (i == 0
+                || i > 0 && filter[i - 1] != '\\') {
+                if (double_quot_begin)
+                    double_quot_begin = 0;
+                else
+                    double_quot_begin = 1;
+            }
         }
 
         // == --> string.match

@@ -108,15 +108,18 @@ int convert_op2func(char **p_converted, char **p_filter, size_t max_len,
     *i += strlen(op) + 1;
     while (*i < strlen(filter)) {
         if (filter[*i] == '"') {
-            if (*double_quot_begin) {
-                *double_quot_begin = 0;
-                if (*j + 1 >= max_len)
-                    return 1;
-                converted[(*j)++] = filter[(*i)++];
-                break;
+            if (*i == 0
+                || *i > 0 && filter[*i - 1] != '\\') {
+                if (*double_quot_begin) {
+                    *double_quot_begin = 0;
+                    if (*j + 1 >= max_len)
+                        return 1;
+                    converted[(*j)++] = filter[(*i)++];
+                    break;
+                }
+                else
+                    *double_quot_begin = 1;
             }
-            else
-                *double_quot_begin = 1;
         }
 
         if (filter[*i] == ' ' && !*double_quot_begin)
@@ -141,10 +144,13 @@ int convert_filter(char *converted, char *filter, int max_len)
     int double_quot_begin = 0;
     for (i = 0, j = 0; i < strlen(filter);) {
         if (filter[i] == '"') {
-            if (double_quot_begin)
-                double_quot_begin = 0;
-            else
-                double_quot_begin = 1;
+            if (i == 0
+                || i > 0 && filter[i - 1] != '\\') {
+                if (double_quot_begin)
+                    double_quot_begin = 0;
+                else
+                    double_quot_begin = 1;
+            }
         }
 
         // != --> ~=
@@ -367,6 +373,12 @@ void test_convert_filter()
     strcpy(filter, "http.url==\"/\"");
     convert_filter(converted, filter, sizeof(converted));
     assert(!strcmp(converted, "http.url==\"/\""));
+
+    bzero(filter, sizeof(filter));
+    bzero(converted, sizeof(converted));
+    strcpy(filter, "http.url contains \"a\\\"b\\\"c\"");
+    convert_filter(converted, filter, sizeof(converted));
+    assert(!strcmp(converted, "string.match(http.url, \"a\\\"b\\\"c\")"));
 }
 
 void test()

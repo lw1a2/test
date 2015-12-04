@@ -31,9 +31,52 @@ void f2()
     printf("captcha_value: %s\n", captcha_value);
 }
 
+char *trim(char *str)
+{
+    char *p = str;
+    char *p1;
+    if (p)
+    {
+        p1 = p + strlen(str) - 1;
+        while (*p && isspace(*p)) p++;
+        while (p1 > p && isspace(*p1)) *p1-- = '\0';
+    }
+    return p;
+}
+
+
+void f3()
+{
+    char s[] = "ABC=1; DEF=2; H=3";
+    char name[256];
+    bzero(name, sizeof(name));
+    char value[256];
+    bzero(value, sizeof(value));
+
+    char *p = strtok(s, ";");
+    if (p) {
+        p = trim(p);
+        printf("%s\n", p);
+
+        sscanf(p, "%[^=]=%s", name, value);
+        printf("name: %s\n", name);
+        printf("value: %s\n", value);
+        printf("\n");
+    }
+    while(p = strtok(NULL, ";")) {
+        p = trim(p);
+        printf("%s\n", p);
+
+        sscanf(p, "%[^=]=%s", name, value);
+        printf("name: %s\n", name);
+        printf("value: %s\n", value);
+        printf("\n");
+    }
+}
+
 int main()
 {
-    f2();
+    f3();
 
     return 0;
 }

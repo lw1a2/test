@@ -1,4 +1,4 @@
-all: add gen_test dostring check_lua
+all: add gen_test dostring check_lua add_dostring
 
 add: add.c
 	gcc -o add add.c -I/usr/local/include/ -llua -ldl -lm
@@ -12,5 +12,8 @@ dostring: dostring.c
 check_lua: check_lua.c
 	gcc -g -o check_lua check_lua.c -I/usr/local/include/ -llua -ldl -lm
 
+add_dostring: add_dostring.c
+	gcc -g -o add_dostring add_dostring.c -I/usr/local/include/ -llua -ldl -lm
+
 clean:
-	rm -rf add gen_test dostring check_lua
+	rm -rf add gen_test dostring check_lua add_dostring

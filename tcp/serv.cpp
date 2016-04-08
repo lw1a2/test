@@ -49,7 +49,7 @@ int main()
     struct sockaddr_in serv;
     bzero(&serv, sizeof(serv));
     serv.sin_family = AF_INET;
-    inet_pton(AF_INET, "10.1.1.1", &serv.sin_addr);
+    inet_pton(AF_INET, "0.0.0.0", &serv.sin_addr);
     //serv.sin_addr.s_addr = htonl(INADDR_ANY);
     serv.sin_port = htons(8888);
 

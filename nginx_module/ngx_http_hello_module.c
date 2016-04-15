@@ -132,5 +132,8 @@ ngx_http_hello(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
     value = cf->args->elts;	
     ngx_hello_string = value[1];
+
+    a();
+
     return NGX_CONF_OK;
 }

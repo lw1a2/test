@@ -19,7 +19,7 @@ static ngx_command_t ngx_stream_hello_commands[] = {
  
  
 static ngx_str_t ngx_hello_string;
- 
+static ngx_int_t (*old_handler)(ngx_stream_session_t *) = NULL;
  
 static ngx_stream_module_t ngx_stream_hello_module_ctx = {
     NULL,
@@ -55,7 +55,7 @@ ngx_stream_hello_handler(ngx_stream_session_t *s)
     ngx_buf_t   *b;
     ngx_chain_t  out;
  
-    return NGX_OK;
+    return old_handler(s);
 }
  
  
@@ -66,6 +66,7 @@ ngx_stream_hello(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 	ngx_str_t                *value;
 
     cscf = ngx_stream_conf_get_module_srv_conf(cf, ngx_stream_core_module);
+    old_handler = cscf->handler;
     cscf->handler = ngx_stream_hello_handler;
 
     value = cf->args->elts;	

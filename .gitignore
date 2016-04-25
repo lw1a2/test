@@ -6,8 +6,8 @@ cscope.out
 tags
 CMakeCache.txt
 CMakeFiles/
-Makefile
 cmake_install.cmake
+cmake/Makefile
 main
 test_aclocal/.deps/
 test_aclocal/Makefile

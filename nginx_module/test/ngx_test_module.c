@@ -2,6 +2,7 @@
 #include <ngx_core.h>
 #include <ngx_stream.h>
  
+#include "test.h"
 
 static char *ngx_test(ngx_conf_t *cf, ngx_command_t *cmd,
     void *conf);
@@ -49,9 +50,5 @@ ngx_test_handler(ngx_stream_session_t *s)
 static char *
 ngx_test(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
-	ngx_str_t                *value;
-
-    value = cf->args->elts;	
-
-    return NGX_CONF_OK;
+    return ngx_conf_parse(cf, NULL);
 }

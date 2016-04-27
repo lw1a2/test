@@ -26,3 +26,6 @@ test_aclocal/hello
 test_aclocal/hello.o
 test_aclocal/install-sh
 test_aclocal/missing
+test_srv
+test_srv_fork
+test_srv_reuse_port

@@ -1,3 +1,4 @@
+#test模块与ngx_core_module, ngx_errlog_module, ngx_conf_module平级
 ngx_addon_name=ngx_test_module
 TEST_MODULES="$TEST_MODULES ngx_test_module"
 CORE_MODULES="$CORE_MODULES $TEST_MODULES"

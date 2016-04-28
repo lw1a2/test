@@ -1,0 +1,1 @@
+stream_hello模块读取配置文件里hello对应的值，然后输出

@@ -5,6 +5,11 @@
  
 static char *ngx_stream_hello(ngx_conf_t *cf, ngx_command_t *cmd,
     void *conf);
+static void *ngx_stream_hello_create_srv_conf(ngx_conf_t *cf);
+
+typedef struct {
+    ngx_str_t                 hello;
+} ngx_stream_hello_srv_conf_t;
  
 static ngx_command_t ngx_stream_hello_commands[] = {
     { ngx_string("hello"),
@@ -18,15 +23,12 @@ static ngx_command_t ngx_stream_hello_commands[] = {
 };
  
  
-static ngx_str_t ngx_hello_string;
-static ngx_int_t (*old_handler)(ngx_stream_session_t *) = NULL;
- 
 static ngx_stream_module_t ngx_stream_hello_module_ctx = {
     NULL,
     NULL,
  
     NULL,
-    NULL,
+    ngx_stream_hello_create_srv_conf,
  
     NULL
 };
@@ -48,29 +50,46 @@ ngx_module_t ngx_stream_hello_module = {
 };
  
  
-static ngx_int_t
+static void
 ngx_stream_hello_handler(ngx_stream_session_t *s)
 {
-    ngx_int_t    rc;
-    ngx_buf_t   *b;
-    ngx_chain_t  out;
- 
-    return old_handler(s);
+    ngx_stream_hello_srv_conf_t *hscf;
+
+    hscf = ngx_stream_get_module_srv_conf(s, ngx_stream_hello_module);
+
+    s->connection->send(s->connection, hscf->hello.data, hscf->hello.len);
+    ngx_stream_close_connection(s->connection);
 }
  
  
 static char *
 ngx_stream_hello(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 {
+    ngx_stream_hello_srv_conf_t *hscf;
+	ngx_str_t                   *value;
     ngx_stream_core_srv_conf_t  *cscf;
-	ngx_str_t                *value;
 
     cscf = ngx_stream_conf_get_module_srv_conf(cf, ngx_stream_core_module);
-    old_handler = cscf->handler;
     cscf->handler = ngx_stream_hello_handler;
 
+    hscf = ngx_stream_conf_get_module_srv_conf(cf, ngx_stream_hello_module);
+
     value = cf->args->elts;	
-    ngx_hello_string = value[1];
+    hscf->hello = value[1];
 
     return NGX_CONF_OK;
 }
+
+static void *
+ngx_stream_hello_create_srv_conf(ngx_conf_t *cf)
+{
+    ngx_stream_hello_srv_conf_t  *hscf;
+
+    hscf = ngx_pcalloc(cf->pool, sizeof(ngx_stream_hello_srv_conf_t));
+    if (hscf == NULL) {
+        return NULL;
+    }
+
+    return hscf;
+}
+

@@ -8,7 +8,7 @@ void test(MALLOC m, FREE f)
 	for (i = 0; i < 50000; ++i) {
 		for (j = 0; j < 1024; ++j) {
 			p[j] = m(sizeof(int));
-			*p[j] = i;
+			*p[j] = i + j;
 		}
 
 		for (j = 0; j < 1024; ++j) {

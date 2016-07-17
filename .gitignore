@@ -32,3 +32,4 @@ test_srv_reuse_port
 *.swp
 memory_manager/c/base
 memory_manager/c/list
+memory_manager/c/map

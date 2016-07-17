@@ -15,6 +15,7 @@ typedef struct _node
 	char map[max_size];	// 0: idle, 1: used
 	int data[max_size];
 	struct _node *next;
+	char all_used;
 } node;
 
 node *head;
@@ -40,6 +41,7 @@ void mm_expand(size_t size)
 
 	n = malloc(sizeof(node));
 	bzero(n->map, sizeof(n->map));
+	n->all_used = 0;
 	n->next = head;
 	head = n;
 }
@@ -65,10 +67,14 @@ void* mm_malloc(size_t size)
 	n = head;
 
 	while (n) {
-		index = mm_get_idle_index(n);
-		if (index != -1) {
-			n->map[index] = 1;
-			return &n->data[index];
+		if (!n->all_used) {
+			index = mm_get_idle_index(n);
+			if (index != -1) {
+				n->map[index] = 1;
+				return &n->data[index];
+			} else {
+				n->all_used = 1;
+			}
 		}
 		n = n->next;
 	}
@@ -92,6 +98,7 @@ void mm_free(void *p)
 		if (n->data <= pi && pi < n->data + max_size) {
 			index = pi - n->data;
 			n->map[index] = 0;
+			n->all_used = 0;
 			return;
 		}
 

@@ -29,3 +29,6 @@ test_aclocal/missing
 test_srv
 test_srv_fork
 test_srv_reuse_port
+*.swp
+memory_manager/c/base
+memory_manager/c/list

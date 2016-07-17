@@ -1,0 +1,2 @@
+time ./base
+time ./list

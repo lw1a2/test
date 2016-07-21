@@ -3,8 +3,8 @@
 Location="WAC"
 Year="16"
 Day="145"
-StartNumber=79
-EndNumber=88
+StartNumber=1
+EndNumber=2
 DATETIME=`date +%Y%m%d%H%M`
 OutputFile="h1b_check_status.${DATETIME}.out"
 
@@ -30,4 +30,5 @@ do
 	echo ${Status} | tee -a ${OutputFile}
 done
 
-awk -F '\t' '{print $2}' ${OutputFile} | sort | uniq
+echo =========================================================================== | tee -a ${OutputFile}
+grep -v ==== ${OutputFile} | awk -F '\t' '{print $2}' | sort | uniq -c | tee -a ${OutputFile}

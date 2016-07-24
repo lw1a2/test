@@ -72,6 +72,7 @@ int main()
 {
 	mm_init();
 	test(mm_malloc, mm_free);
+	//test_random(mm_malloc, mm_free);
 	mm_fini();
 	return 0;
 }

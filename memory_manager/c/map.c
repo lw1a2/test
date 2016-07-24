@@ -16,12 +16,12 @@ typedef struct node
 	int data;
 } node_t;
 
-typedef struct _block
+typedef struct block
 {
 	node_t node[max_size];	
 	int idles[max_size];
 	int idle_count;
-	struct _block *next;
+	struct block *next;
 } block_t;
 
 block_t *head;
@@ -103,6 +103,7 @@ int main()
 {
 	mm_init();
 	test(mm_malloc, mm_free);
+	//test_random(mm_malloc, mm_free);
 	mm_fini();
 	return 0;
 }

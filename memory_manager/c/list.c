@@ -33,7 +33,7 @@ void mm_fini()
 
 void mm_expand(size_t size)
 {
-	const int max_size = 32;
+	const int max_size = 1024;
 	int i;
 	node *n;
 

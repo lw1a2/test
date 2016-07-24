@@ -2,7 +2,7 @@
 
 #include <stddef.h>
 #include <strings.h>
-#include <assert.h>
+#include <stdio.h>
 
 #define container_of(ptr, type, member) ({			\
 			const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
@@ -10,15 +10,21 @@
 
 #define max_size 32
 
-typedef struct _node
+typedef struct node
 {
-	char map[max_size];	// 0: idle, 1: used
-	int data[max_size];
-	struct _node *next;
-	char all_used;
-} node;
+	char is_used;	// 0: idle, 1: used
+	int index;
+	int data;
+} node_t;
 
-node *head;
+typedef struct _block
+{
+	node_t node[max_size];	
+	struct _block *next;
+	char all_used;
+} block_t;
+
+block_t *head;
 
 void mm_init()
 {
@@ -26,32 +32,36 @@ void mm_init()
 
 void mm_fini()
 {
-	node *n;
+	block_t *block;
 
 	while (head) {
-		n = head;
+		block = head;
 		head = head->next;
-		free(n);
+		free(block);
 	}
 }
 
 void mm_expand(size_t size)
 {
-	node *n;
+	block_t *block;
+	int i;
 
-	n = malloc(sizeof(node));
-	bzero(n->map, sizeof(n->map));
-	n->all_used = 0;
-	n->next = head;
-	head = n;
+	block = malloc(sizeof(block_t));
+	for (i = 0; i < max_size; ++i) {
+		block->node[i].is_used = 0;
+		block->node[i].index = i;
+	}
+	block->all_used = 0;
+	block->next = head;
+	head = block;
 }
 
-int mm_get_idle_index(node *n)
+int mm_get_idle_index(block_t *block)
 {
 	int i;
 
-	for (i = 0; i < sizeof(n->map); ++i) {
-		if (n->map[i] == 0) {
+	for (i = 0; i < max_size; ++i) {
+		if (block->node[i].is_used == 0) {
 			return i;
 		}
 	}
@@ -61,51 +71,40 @@ int mm_get_idle_index(node *n)
 
 void* mm_malloc(size_t size)
 {
-	node *n;
+	block_t *block;
 	int index;
 
-	n = head;
+	block = head;
 
-	while (n) {
-		if (!n->all_used) {
-			index = mm_get_idle_index(n);
+	while (block) {
+		if (!block->all_used) {
+			index = mm_get_idle_index(block);
 			if (index != -1) {
-				n->map[index] = 1;
-				return &n->data[index];
+				block->node[index].is_used = 1;
+				return &block->node[index].data;
 			} else {
-				n->all_used = 1;
+				block->all_used = 1;
 			}
 		}
-		n = n->next;
+		block = block->next;
 	}
 
 	mm_expand(size);
 	
-	head->map[0] = 1;
-	return &head->data[0];
+	head->node[0].is_used = 1;
+	return &head->node[0].data;
 }
 
 void mm_free(void *p)
 {
-	node *n;
-	int index;
-	int *pi;
+	node_t *n;
+	block_t *block;
 
-	n = head;
-	pi = p;
-	
-	while (n) {
-		if (n->data <= pi && pi < n->data + max_size) {
-			index = pi - n->data;
-			n->map[index] = 0;
-			n->all_used = 0;
-			return;
-		}
+	n = container_of(p, node_t, data);
+	n->is_used = 0;
 
-		n = n->next;
-	}
-
-	assert(0);
+	block = container_of((void*)(n - n->index), block_t, node);
+	block->all_used = 0;
 }
 
 int main()
